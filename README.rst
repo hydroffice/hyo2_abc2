@@ -1,7 +1,7 @@
 HydrOffice ABC
 ==============
 
-.. image:: https://github.com/hydroffice/hyo2_abc/raw/master/hyo2/abc2/app/media/app_icon.png
+.. image:: https://github.com/hydroffice/hyo2_abc2/raw/master/hyo2/abc2/app/media/app_icon.png
     :alt: logo
 
 |
@@ -14,12 +14,12 @@ HydrOffice ABC
     :target: https://travis-ci.com/hydroffice/hyo2_abc2
     :alt: travis-ci
 
-.. image:: https://ci.appveyor.com/api/projects/status/pf937dxph2600m6l?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/5n34b7egbwmld84j?svg=true
     :target: https://ci.appveyor.com/project/giumas/hyo2-abc2
     :alt: appveyor
 
-.. image:: https://api.codacy.com/project/badge/Grade/8b44e8012ba64cffa5e1488178085cf0
-    :target: https://www.codacy.com/app/hydroffice/hyo2_abc2/dashboard
+.. image:: https://app.codacy.com/project/badge/Grade/6f90f01fa2ce4eef9ceaec9b4b2ba591
+    :target: https://www.codacy.com/gh/hydroffice/hyo2_abc2/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=hydroffice/hyo2_abc2&amp;utm_campaign=Badge_Grade
     :alt: codacy
 
 .. image:: https://coveralls.io/repos/github/hydroffice/hyo2_abc2/badge.svg?branch=master
