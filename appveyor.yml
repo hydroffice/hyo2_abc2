@@ -34,8 +34,8 @@ install:
   - activate test-environment
   - python --version
 
-  - conda install appdirs bidict cartopy "gdal<3.0.0" matplotlib-base numpy psutil pyproj
-  - pip install coveralls PySide2 pytest pytest-cov PyYAML wheel
+  - conda install appdirs bidict cartopy gdal matplotlib-base numpy psutil pyproj PySide6
+  - pip install coveralls pytest pytest-cov PyYAML wheel
 
 build: off
 build_script:
