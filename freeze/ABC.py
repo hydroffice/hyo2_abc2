@@ -20,7 +20,7 @@ app = QtWidgets.QApplication([])
 app.setApplicationName('%s' % app_info.app_name)
 app.setOrganizationName("HydrOffice")
 app.setOrganizationDomain("hydroffice.org")
-app.setStyleSheet(AppStyle.load_stylesheet())
+AppStyle.apply(app=app)
 
 if Helper.is_script_already_running():
     txt = "The app is already running!"

@@ -10,11 +10,6 @@ class TestABCLibAppInfo(unittest.TestCase):
         self.assertIsInstance(css_str, str)
         self.assertGreater(len(css_str), 0)
 
-    def test_load_stylesheet(self):
-        ss_str = AppStyle.load_stylesheet()
-        self.assertIsInstance(ss_str, str)
-        self.assertGreater(len(ss_str), 0)
-
 
 def suite():
     s = unittest.TestSuite()

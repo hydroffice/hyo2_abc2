@@ -36,7 +36,7 @@ class AppInfo:
         self.app_icon_path = os.path.join(self.app_media_path, "app_icon.png")
 
         self.app_tabs_icon_size = 36
-        self.app_toolbars_icon_size = 24
+        self.app_toolbars_icon_size = 28
 
         GdalAux.check_gdal_data()
         GdalAux.check_proj4_data()

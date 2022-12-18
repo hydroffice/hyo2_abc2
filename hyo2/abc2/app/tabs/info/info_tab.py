@@ -263,7 +263,7 @@ class InfoTab(QtWidgets.QMainWindow):
 
     def show_noaa_support(self):
         self.change_url(Helper(lib_info=self._li).web_url("noaa_support"))
-        noaa_s57 = NOAAS57Dialog(lib_info=self._li, app_info=self._ai)
+        noaa_s57 = NOAAS57Dialog(parent=self, lib_info=self._li, app_info=self._ai)
         noaa_s57.exec_()
 
     def load_license(self):

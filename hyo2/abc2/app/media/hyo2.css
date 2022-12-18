@@ -1,0 +1,21 @@
+/*  ------------------------------------------------------------------------  */
+/*  QPushButton  */
+
+QPushButton {{
+  text-transform: none;
+  padding: 1px;
+}}
+
+QPushButton:hover {{
+  background-color: rgba(230, 230, 230, 100);
+}}
+
+
+/*  ------------------------------------------------------------------------  */
+/*  QToolButton  */
+
+QToolButton {{
+  margin: 1px;
+  padding: 1px;
+}}
+

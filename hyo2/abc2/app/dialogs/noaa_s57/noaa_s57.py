@@ -20,8 +20,7 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         self._li = lib_info
         self._ai = app_info
 
-        fixed_height = 32
-        fixed_width = 135
+        fixed_width = 160
 
         self.setWindowTitle("NOAA S57 Files")
         self.resize(QtCore.QSize(240, 400))
@@ -68,7 +67,6 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         vbox.addLayout(hbox)
         hbox.addStretch()
         button = QtWidgets.QPushButton(self)
-        button.setFixedHeight(fixed_height)
         button.setFixedWidth(fixed_width)
         button.setText("#1 -> Unzip archive")
         button.setToolTip('Unzip the internal archive to a local folder')
@@ -81,7 +79,6 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         vbox.addLayout(hbox)
         hbox.addStretch()
         button = QtWidgets.QPushButton(self)
-        button.setFixedHeight(fixed_height)
         button.setFixedWidth(fixed_width)
         button.setText("#2 -> Copy folder")
         button.setToolTip('Copy the support files to the C:\\CARIS folder')
@@ -94,7 +91,6 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         vbox.addLayout(hbox)
         hbox.addStretch()
         button = QtWidgets.QPushButton(self)
-        button.setFixedHeight(fixed_height)
         button.setFixedWidth(fixed_width)
         button.setText("#3 -> Install files")
         button.setToolTip('Execute the batch file to install the support files (requires admin privileges)')
@@ -108,15 +104,9 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         hbox.addStretch()
         button = QtWidgets.QPushButton()
         hbox.addWidget(button)
-        button.setFixedHeight(fixed_height)
-        button.setFixedWidth(fixed_height)
         icon_info = QtCore.QFileInfo(os.path.join(self.media, 'small_info.png'))
         button.setIcon(QtGui.QIcon(icon_info.absoluteFilePath()))
         button.setToolTip('Open the manual page')
-        button.setStyleSheet(
-            "QPushButton { background-color: rgba(255, 255, 255, 0); }\n"
-            "QPushButton:hover { background-color: rgba(230, 230, 230, 100); }\n"
-        )
         # noinspection PyUnresolvedReferences
         button.clicked.connect(self.click_open_manual)
         hbox.addStretch()

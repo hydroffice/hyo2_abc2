@@ -1,5 +1,9 @@
 import os
 import platform
+from qt_material import apply_stylesheet
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from PySide6 import QtWidgets
 
 
 class AppStyle:
@@ -8,32 +12,17 @@ class AppStyle:
     media = os.path.abspath(os.path.join(here, "media"))
 
     @classmethod
+    def apply(cls, app: 'QtWidgets.QApplication'):
+        xml_path = os.path.abspath(os.path.join(cls.media, "hyo2.xml"))
+        if not os.path.exists(xml_path):
+            raise RuntimeError("Unable to locate %s" % xml_path)
+        css_path = os.path.abspath(os.path.join(cls.media, "hyo2.css"))
+        if not os.path.exists(css_path):
+            raise RuntimeError("Unable to locate %s" % css_path)
+        apply_stylesheet(app=app, theme=xml_path, invert_secondary=True, extra={'density_scale': '0'},
+                         css_file=css_path)
+
+    @classmethod
     def html_css(cls) -> str:
         with open(os.path.join(cls.media, "html.css")) as fid:
             return fid.read()
-
-    @classmethod
-    def load_stylesheet(cls) -> str:
-        media = cls.media.replace("\\", "/")
-        if platform.system().lower() == 'win32':
-            import win32api
-            # noinspection PyProtectedMember
-            media = win32api.GetLongPathName(media).replace("\\", "/")
-        style_path = os.path.join(media, "app.css").replace("\\", "/")
-
-        with open(style_path) as fid:
-            style = fid.read().replace("LOCAL_PATH", media)
-            # print(style)
-
-        if platform.system().lower() == 'darwin':  # see issue #12 on github
-            mac_fix = '''
-            QDockWidget::title
-            {
-                background-color: #31363b;
-                text-align: center;
-                height: 12px;
-            }
-            '''
-            style += mac_fix
-
-        return style

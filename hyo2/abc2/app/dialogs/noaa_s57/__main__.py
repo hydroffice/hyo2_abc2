@@ -26,7 +26,7 @@ app = QtWidgets.QApplication([])
 app.setApplicationName('NOAA S57')
 app.setOrganizationName("HydrOffice")
 app.setOrganizationDomain("hydroffice.org")
-app.setStyleSheet(AppStyle.load_stylesheet())
+AppStyle.apply(app=app)
 
 d = NOAAS57Dialog(lib_info=LibInfo(), app_info=AppInfo())
 d.setWindowIcon(QtGui.QIcon(os.path.join(AppInfo().app_media_path, "noaa_support.png")))
