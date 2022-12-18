@@ -19,7 +19,7 @@ class AppStyle:
         css_path = os.path.abspath(os.path.join(cls.media, "hyo2.css"))
         if not os.path.exists(css_path):
             raise RuntimeError("Unable to locate %s" % css_path)
-        apply_stylesheet(app=app, theme=xml_path, invert_secondary=True, extra={'density_scale': '0'},
+        apply_stylesheet(app=app, theme=xml_path, invert_secondary=True, extra={'density_scale': '-2'},
                          css_file=css_path)
 
     @classmethod

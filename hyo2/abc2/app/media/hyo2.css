@@ -1,4 +1,11 @@
 /*  ------------------------------------------------------------------------  */
+/*  QGroupBox  */
+
+QGroupBox {{
+  text-transform: none;
+}}
+
+/*  ------------------------------------------------------------------------  */
 /*  QPushButton  */
 
 QPushButton {{
@@ -10,6 +17,23 @@ QPushButton:hover {{
   background-color: rgba(230, 230, 230, 100);
 }}
 
+/*  ------------------------------------------------------------------------  */
+/*  QTabBar  */
+
+QTabBar::tab:hover {{
+  background-color: rgba(230, 230, 230, 100);
+}}
+
+QTabBar::tab:top{{
+  padding: 0px 1px 0px 16px;
+  height: 80px;
+}}
+
+QTabBar::tab:bottom{{
+  padding: 0px 1px 0px 12px;
+  height: 60px;
+}}
+
 
 /*  ------------------------------------------------------------------------  */
 /*  QToolButton  */
@@ -18,4 +42,5 @@ QToolButton {{
   margin: 1px;
   padding: 1px;
 }}
+
 

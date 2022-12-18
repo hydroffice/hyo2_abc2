@@ -27,8 +27,8 @@ install:
   - conda activate test-environment
   - python --version
 
-  - conda install appdirs bidict cartopy gdal matplotlib-base numpy psutil pyproj PySide6
-  - pip install coveralls PyYAML pytest pytest-cov wheel
+  - conda install appdirs bidict cartopy gdal matplotlib-base numpy psutil pyproj
+  - pip install coveralls PySide6 pytest pytest-cov PyYAML wheel
   - pip install -e .
   - conda list --show-channel-urls
 

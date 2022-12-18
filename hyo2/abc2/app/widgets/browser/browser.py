@@ -46,10 +46,10 @@ class Browser(QtWidgets.QMainWindow):
         self._tool_bar.addWidget(self.address_line_edit)
 
         self.view = QtWebEngineWidgets.QWebEngineView()
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.PluginsEnabled, True)
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.FullScreenSupportEnabled, True)
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.AllowRunningInsecureContent, True)
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.SpatialNavigationEnabled, True)
+        # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.PluginsEnabled, True)
+        # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.FullScreenSupportEnabled, True)
+        # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.AllowRunningInsecureContent, True)
+        # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.SpatialNavigationEnabled, True)
         self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.JavascriptEnabled, True)
         self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.JavascriptCanOpenWindows, True)
         self.view.settings().setAttribute(
