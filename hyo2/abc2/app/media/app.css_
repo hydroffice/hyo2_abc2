@@ -1,0 +1,72 @@
+/* CURRENTLY UNUSED */
+
+/*noinspection CssInvalidPropertyValue,CssUnknownProperty,CssInvalidHtmlTagReference,CssInvalidPseudoSelector*/
+QMainWindow#MainWindow
+{
+    /*color: #61889b;*/
+    /*background-color: #fefdfc;*/
+    /*selection-background-color: #bad3e0;*/
+    /*selection-color: #61889b;*/
+    /*background-clip: border;*/
+    /*border-image: none;*/
+    /*border: 0 transparent black;*/
+    /*outline: 0;*/
+}
+
+/* QCheckBox */
+QCheckBox
+{
+    /*padding: 0;*/
+}
+
+
+/* QGroupBox */
+
+QGroupBox::title
+{
+    color: rgb(155, 155, 155);
+}
+
+/* QStatusBar */
+
+/*noinspection CssInvalidPropertyValue,CssUnknownProperty,CssInvalidHtmlTagReference,CssInvalidPseudoSelector*/
+QStatusBar
+{
+    background: rgba(255,255,255,128);
+    color: rgba(0,0,0,128);
+    font-size: 8pt;
+}
+
+/* QComboBox */
+
+QComboBox
+{
+    color: rgba(25,115,200,255);
+    font-family: "Calibri", sans-serif;
+    font-size: 10pt;
+}
+
+
+/* QListWidget */
+
+QListWidget
+{
+    color: rgba(25,115,200,255);
+    font-family: "Calibri", sans-serif;
+    font-size: 10pt;
+}
+
+/* QPushButton */
+
+QPushButton
+{
+    color: rgba(25,115,200,255);
+    font-family: "Calibri", sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+
+/* QLabel */
+
+
