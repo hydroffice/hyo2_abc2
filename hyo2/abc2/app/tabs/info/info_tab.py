@@ -196,6 +196,9 @@ class InfoTab(QtWidgets.QMainWindow):
     def _has_qt_web_engine_process(self) -> bool:
         # noinspection PyArgumentList
         exe_path = os.path.abspath(QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.LibraryExecutablesPath))
+        # FIXME: workaround for Pydro22's qt.conf
+        if "Library" in exe_path:
+            return False
         if not os.path.exists(exe_path):
             logger.error("Unable to locate the path to Qt executables: %s" % exe_path)
             return False
