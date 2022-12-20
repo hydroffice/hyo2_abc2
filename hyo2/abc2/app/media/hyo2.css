@@ -20,8 +20,16 @@ QPushButton:hover {{
 /*  ------------------------------------------------------------------------  */
 /*  QTabBar  */
 
+QTabBar::tab:!selected {{
+  background-color: rgba(230, 230, 230, 80);
+}}
+
 QTabBar::tab:hover {{
-  background-color: rgba(230, 230, 230, 100);
+  background-color: rgba(230, 230, 230, 160);
+}}
+
+QTabBar::tab:disabled {{
+  background-color: rgba(230, 230, 230, 220);
 }}
 
 QTabBar::tab:top{{

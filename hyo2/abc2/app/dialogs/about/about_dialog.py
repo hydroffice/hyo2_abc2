@@ -65,15 +65,15 @@ class AboutDialog(QtWidgets.QDialog):
         self.tab_widget = QtWidgets.QTabWidget(self)
         self.tab_widget.setTabPosition(QtWidgets.QTabWidget.South)
         self.general_info_tab = GeneralInfoTab(lib_info=self._li, parent=self, with_ocs_email=with_ocs_email)
-        self.tab_widget.addTab(self.general_info_tab, "Overview")
+        self.tab_widget.addTab(self.general_info_tab, "Overview  ")
         self.license_tab = LicenseTab(app_info=self._ai, parent=self)
-        self.tab_widget.addTab(self.license_tab, "License")
+        self.tab_widget.addTab(self.license_tab, "License  ")
         if self.with_locale_tab:
             self.local_environment_tab = LocalEnvironmentTab(self)
-            self.tab_widget.addTab(self.local_environment_tab, "Local")
+            self.tab_widget.addTab(self.local_environment_tab, "Local  ")
         if self.with_gdal_tab:
             self.gdal_tab = GdalInfoTab(self)
-            self.tab_widget.addTab(self.gdal_tab, "GDAL")
+            self.tab_widget.addTab(self.gdal_tab, "GDAL  ")
         self.tab_widget.setCurrentIndex(0)
         right_layout.addWidget(self.tab_widget)
 
