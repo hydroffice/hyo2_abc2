@@ -35,6 +35,7 @@ class InfoTab(QtWidgets.QMainWindow):
                  with_ocs_email: bool = False
                  ):
         super().__init__(main_win)
+        self.main_win = main_win
         self._with_ocs_email = with_ocs_email
         self._li = lib_info
         self._ai = app_info
