@@ -32,4 +32,4 @@ d = NOAAS57Dialog(lib_info=LibInfo(), app_info=AppInfo())
 d.setWindowIcon(QtGui.QIcon(os.path.join(AppInfo().app_media_path, "noaa_support.png")))
 d.show()
 
-sys.exit(app.exec_())
+sys.exit(app.exec())
