@@ -2,6 +2,7 @@ import os
 import datetime
 import logging
 import string
+from typing import List
 
 from hyo2.abc2.lib.helper import Helper
 from hyo2.abc2.app.app_info import AppInfo
@@ -22,10 +23,22 @@ class Report:
         self.alphabet = list(string.ascii_uppercase)
 
     def __iadd__(self, record: str) -> "Report":
-        """Add a record to the existing list of string records"""
-        self.records.append(record)
+        """Append a record to the existing list of string records"""
 
-        # tracking section and sub-section
+        self.records.append(record)
+        self._evaluate_record(record=record)
+        return self
+
+    def __isub__(self, records: List[str]) -> "Report":
+        """Prepend records to the existing list of string records"""
+        for record in reversed(records):
+            self.records.insert(0, record)
+            self._evaluate_record(record)
+        return self
+
+    def _evaluate_record(self, record: str) -> None:
+        """Tracking section and sub-section"""
+
         last_item = record.split(' ')[-1]
 
         if last_item == "[SECTION]":  # the string is a section separator
@@ -47,8 +60,6 @@ class Report:
 
         elif last_item == "[SKIP_CHK]":  # the string is a section separator
             self.subsection_nr += 1
-
-        return self
 
     def cur_section(self) -> str:
         return "%s.%s" % (self.alphabet[self.section_nr], self.subsection_nr - 1)
