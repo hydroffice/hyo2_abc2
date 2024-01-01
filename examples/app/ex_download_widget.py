@@ -1,7 +1,9 @@
-import sys
 import logging
+import sys
 
 from PySide6 import QtWidgets, QtWebEngineWidgets
+
+from hyo2.abc2.app.app_style import AppStyle
 from hyo2.abc2.app.widgets.browser.download_widget import DownloadWidget
 from hyo2.abc2.lib.logging import set_logging
 
@@ -20,10 +22,12 @@ def download_requested(item):
     mw.statusBar().addWidget(w)
 
 
-app = QtWidgets.QApplication([])
+app = QtWidgets.QApplication(sys.argv)
+AppStyle.apply(app)
 
 mw = QtWidgets.QMainWindow()
 view = QtWebEngineWidgets.QWebEngineView()
+# noinspection PyUnresolvedReferences
 view.page().profile().downloadRequested.connect(download_requested)
 mw.setCentralWidget(view)
 mw.show()

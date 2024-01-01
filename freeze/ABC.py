@@ -1,22 +1,20 @@
 import sys
+
 from PySide6 import QtWidgets, QtGui, QtCore
 
+from hyo2.abc2.app.app_info import AppInfo
+from hyo2.abc2.app.app_style import AppStyle
+from hyo2.abc2.app.tabs.info.info_tab import InfoTab
 from hyo2.abc2.lib.helper import Helper
 from hyo2.abc2.lib.lib_info import LibInfo
-from hyo2.abc2.app.app_style import AppStyle
-from hyo2.abc2.app.app_info import AppInfo
-from hyo2.abc2.app.tabs.info.info_tab import InfoTab
 from hyo2.abc2.lib.logging import set_logging
 
-
 set_logging(ns_list=["hyo2.abc2", ])
-
-sys.argv.append("--disable-web-security")  # temporary fix for CORS warning (QTBUG-70228)
 
 app_info = AppInfo()
 lib_info = LibInfo()
 
-app = QtWidgets.QApplication([])
+app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName('%s' % app_info.app_name)
 app.setOrganizationName("HydrOffice")
 app.setOrganizationDomain("hydroffice.org")
@@ -53,7 +51,6 @@ t = InfoTab(app_info=app_info, lib_info=lib_info,
             with_license=True,
             with_noaa_57=True,
             main_win=mw)
-
 
 tabs.insertTab(0, t, "Info")
 
