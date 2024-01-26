@@ -15,6 +15,8 @@ class WebEnginePage(QWebEnginePage):
             return
         if "ch-ua-" in message:
             return
+        if "adblockEnabled true" in message:
+            return
 
         logger.debug("QWebEngine: %s[#%d] -> %s" % (source_id, line_number, message))
 
