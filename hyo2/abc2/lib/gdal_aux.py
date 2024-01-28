@@ -1,13 +1,13 @@
+import logging
+import os
+from typing import Optional
+
+import pyproj
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
-import pyproj
 
-from typing import Optional
-import os
-import logging
-
-from hyo2.abc2.lib.helper import Helper
+from hyo2.abc2.lib.package.pkg_helper import PkgHelper
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,6 @@ class GdalAux:
         driver_list.sort()  # Sorting the messy list of ogr drivers
 
         for i, drv in enumerate(driver_list):
-
             print("%3s: %25s" % (i, drv))
 
     @classmethod
@@ -140,19 +139,16 @@ class GdalAux:
             return
 
         if 'GDAL_DATA' in os.environ:
-
             # logger.debug("unset original GDAL_DATA = %s" % os.environ['GDAL_DATA'])
             del os.environ['GDAL_DATA']
 
         if 'GDAL_DRIVER_PATH' in os.environ:
-
             # logger.debug("unset original GDAL_DRIVER_PATH = %s" % os.environ['GDAL_DRIVER_PATH'])
             del os.environ['GDAL_DRIVER_PATH']
 
         gdal_data_path0 = os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal')
         s57_agencies_csv_path0 = os.path.join(gdal_data_path0, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path0):
-
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path0)
             # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
@@ -162,7 +158,6 @@ class GdalAux:
         gdal_data_path1 = os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal')
         s57_agencies_csv_path1 = os.path.join(gdal_data_path1, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path1):
-
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path1)
             # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
@@ -170,10 +165,9 @@ class GdalAux:
             return
 
         # anaconda specific (Win)
-        gdal_data_path2 = os.path.join(Helper.python_path(), 'Library', 'data')
+        gdal_data_path2 = os.path.join(PkgHelper.python_path(), 'Library', 'data')
         s57_agencies_csv_path2 = os.path.join(gdal_data_path2, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path2):
-
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path2)
             # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
@@ -181,10 +175,9 @@ class GdalAux:
             return
 
         # anaconda specific (Win)
-        gdal_data_path3 = os.path.join(Helper.python_path(), 'Library', 'share', 'gdal')
+        gdal_data_path3 = os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal')
         s57_agencies_csv_path3 = os.path.join(gdal_data_path3, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path3):
-
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path3)
             # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
@@ -192,10 +185,9 @@ class GdalAux:
             return
 
         # anaconda specific (Linux)
-        gdal_data_path4 = os.path.join(Helper.python_path(), 'share', 'gdal')
+        gdal_data_path4 = os.path.join(PkgHelper.python_path(), 'share', 'gdal')
         s57_agencies_csv_path4 = os.path.join(gdal_data_path4, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path4):
-
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path4)
             # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
@@ -222,7 +214,6 @@ class GdalAux:
                 return
 
         if 'PROJ_LIB' in os.environ:
-
             # logger.debug("unset original PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             del os.environ['PROJ_LIB']
 
@@ -238,7 +229,7 @@ class GdalAux:
             return
 
         # anaconda specific (Win)
-        proj4_data_path2 = os.path.join(Helper.python_path(), 'Library', 'data')
+        proj4_data_path2 = os.path.join(PkgHelper.python_path(), 'Library', 'data')
         epsg_path2 = os.path.join(proj4_data_path2, 'epsg')
         if os.path.exists(epsg_path2):
 
@@ -250,7 +241,7 @@ class GdalAux:
             return
 
         # anaconda specific (Win)
-        proj4_data_path3 = os.path.join(Helper.python_path(), 'Library', 'share')
+        proj4_data_path3 = os.path.join(PkgHelper.python_path(), 'Library', 'share')
         epsg_path3 = os.path.join(proj4_data_path3, 'epsg')
         if os.path.exists(epsg_path3):
 
@@ -262,7 +253,7 @@ class GdalAux:
             return
 
         # anaconda specific (Linux)
-        proj4_data_path4 = os.path.join(Helper.python_path(), 'share')
+        proj4_data_path4 = os.path.join(PkgHelper.python_path(), 'share')
         epsg_path4 = os.path.join(proj4_data_path4, 'epsg')
         if os.path.exists(epsg_path4):
 
@@ -274,7 +265,7 @@ class GdalAux:
             return
 
         # anaconda specific (Linux)
-        proj4_data_path5 = os.path.join(Helper.python_path(), 'share', 'proj')
+        proj4_data_path5 = os.path.join(PkgHelper.python_path(), 'share', 'proj')
         proj_db_path5 = os.path.join(proj4_data_path5, 'proj.db')
         if os.path.exists(proj_db_path5):
 
@@ -286,7 +277,7 @@ class GdalAux:
             return
 
         # anaconda specific (Win)
-        proj4_data_path6 = os.path.join(Helper.python_path(), 'Library', 'share', 'proj')
+        proj4_data_path6 = os.path.join(PkgHelper.python_path(), 'Library', 'share', 'proj')
         proj_db_path6 = os.path.join(proj4_data_path6, 'proj.db')
         if os.path.exists(proj_db_path6):
 
