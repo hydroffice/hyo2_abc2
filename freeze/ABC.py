@@ -2,25 +2,21 @@ import sys
 
 from PySide6 import QtWidgets, QtGui, QtCore
 
-from hyo2.abc2.app.app_info import AppInfo
-from hyo2.abc2.app.app_style import AppStyle
-from hyo2.abc2.app.tabs.info.info_tab import InfoTab
-from hyo2.abc2.lib.helper import Helper
-from hyo2.abc2.lib.lib_info import LibInfo
+from hyo2.abc2.app.app_style.app_style import AppStyle
+from hyo2.abc2.app.pkg_info import app_info
+from hyo2.abc2.app.pkg_info.pkg_info_tab import PkgInfoTab
 from hyo2.abc2.lib.logging import set_logging
+from hyo2.abc2.lib.package.pkg_helper import PkgHelper
 
 set_logging(ns_list=["hyo2.abc2", ])
 
-app_info = AppInfo()
-lib_info = LibInfo()
-
 app = QtWidgets.QApplication(sys.argv)
-app.setApplicationName('%s' % app_info.app_name)
+app.setApplicationName(app_info.app_name)
 app.setOrganizationName("HydrOffice")
 app.setOrganizationDomain("hydroffice.org")
 AppStyle.apply(app=app)
 
-if Helper.is_script_already_running():
+if PkgHelper.is_script_already_running():
     txt = "The app is already running!"
     msg_box = QtWidgets.QMessageBox()
     msg_box.setWindowTitle("Multiple Instances of ABC")
@@ -40,17 +36,18 @@ mw.setWindowIcon(QtGui.QIcon(app_info.app_icon_path))
 tabs = QtWidgets.QTabWidget()
 mw.setCentralWidget(tabs)
 
-t = InfoTab(app_info=app_info, lib_info=lib_info,
-            with_online_manual=True,
-            with_offline_manual=True,
-            with_bug_report=True,
-            with_hydroffice_link=True,
-            with_ccom_link=True,
-            with_noaa_link=True,
-            with_unh_link=True,
-            with_license=True,
-            with_noaa_57=True,
-            main_win=mw)
+t = PkgInfoTab(
+    app_info=app_info,
+    with_online_manual=True,
+    with_offline_manual=True,
+    with_bug_report=True,
+    with_hydroffice_link=True,
+    with_ccom_link=True,
+    with_noaa_link=True,
+    with_unh_link=True,
+    with_license=True,
+    with_noaa_57=True,
+    main_win=mw)
 
 tabs.insertTab(0, t, "Info")
 
