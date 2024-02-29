@@ -61,7 +61,9 @@ class Report:
         elif last_item == "[SKIP_CHK]":  # the string is a section separator
             self.subsection_nr += 1
 
-    def cur_section(self) -> str:
+    def cur_section(self, with_prepended_summary: bool = False) -> str:
+        if with_prepended_summary:
+            return "%s.%s" % (self.alphabet[self.section_nr + 1], self.subsection_nr - 1)
         return "%s.%s" % (self.alphabet[self.section_nr], self.subsection_nr - 1)
 
     def display(self) -> None:
