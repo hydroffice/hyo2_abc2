@@ -71,7 +71,7 @@ class PkgExceptionDialog(QtWidgets.QDialog):
         self.tb_groupbox.setObjectName("tracebackGroupBox")
         self.tb_layout = QtWidgets.QVBoxLayout(self.tb_groupbox)
         self.tb_editor = QtWidgets.QTextBrowser(self.tb_groupbox)
-        self.tb_editor.setLineWrapMode(QtWidgets.QTextBrowser.NoWrap)
+        self.tb_editor.setLineWrapMode(QtWidgets.QTextBrowser.LineWrapMode.NoWrap)
         self.tb_editor.setPlainText("")
         # noinspection PyUnresolvedReferences
         self.tb_editor.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard | QtCore.Qt.TextSelectableByMouse)
@@ -100,7 +100,7 @@ class PkgExceptionDialog(QtWidgets.QDialog):
         self.right_layout.addSpacing(12)
 
         self.buttons_groupbox = QtWidgets.QDialogButtonBox(self)
-        self.buttons_groupbox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttons_groupbox.setOrientation(QtCore.Qt.Orientation.Horizontal)
         # noinspection PyUnresolvedReferences
         self.buttons_groupbox.setStandardButtons(QtWidgets.QDialogButtonBox.Close | QtWidgets.QDialogButtonBox.Ignore)
         self.right_layout.addWidget(self.buttons_groupbox)
@@ -113,16 +113,16 @@ class PkgExceptionDialog(QtWidgets.QDialog):
         style = QtWidgets.QApplication.style()
 
         # noinspection PyArgumentList
-        self.email_button = QtWidgets.QPushButton(style.standardIcon(style.SP_CommandLink), 'Email',
+        self.email_button = QtWidgets.QPushButton(style.standardIcon(style.StandardPixmap.SP_CommandLink), 'Email',
                                                   toolTip='Send the bug report via email.', autoDefault=False,
                                                   clicked=self.email_bug_report)
-        self.buttons_groupbox.addButton(self.email_button, QtWidgets.QDialogButtonBox.ActionRole)
+        self.buttons_groupbox.addButton(self.email_button, QtWidgets.QDialogButtonBox.ButtonRole.ActionRole)
 
         # noinspection PyArgumentList
-        self.save_button = QtWidgets.QPushButton(style.standardIcon(style.SP_DialogSaveButton), 'Save',
+        self.save_button = QtWidgets.QPushButton(style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), 'Save',
                                                  toolTip='Save the bug report on file.', autoDefault=False,
                                                  clicked=self.save_bug_report)
-        self.buttons_groupbox.addButton(self.save_button, QtWidgets.QDialogButtonBox.ActionRole)
+        self.buttons_groupbox.addButton(self.save_button, QtWidgets.QDialogButtonBox.ButtonRole.ActionRole)
 
         self.right_layout.addStretch()
 
