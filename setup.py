@@ -43,8 +43,14 @@ setup(
     ]),
     package_data={
         "": [
-            "media/*.png", "media/**/*.png", "media/*.ico", "media/*.icns",
-            "media/*.txt", "media/*.css", "media/LICENSE", "media/*.pdf", "media/*.zip"
+            "media/LICENSE",
+            "media/*.css",
+            "media/*.icns", "media/*.ico",
+            "media/*.pdf",
+            "media/*.png", "media/**/*.png",
+            "media/*.txt",
+            "media/*.xml",
+            "media/*.zip"
         ],
     },
     zip_safe=False,
@@ -56,19 +62,16 @@ setup(
     install_requires=[
         "appdirs",
         "gdal",
-        "pyproj",
+        "matplotlib",
         "numpy",
+        "psutil",
+        "pyproj",
+        "pywin32 ; ""platform_system=='Windows'",
+        "PySide6",
+        "qt-material",
         "requests"
     ],
-    extras_require={
-        "extended": [
-            "bidict",
-            "matplotlib",
-            "psutil",
-            "PySide6",
-            "pywin32 ; ""platform_system=='Windows'"],
-    },
-    python_requires='>=3.5',
+    python_requires='>=3.8',
     entry_points={
         "gui_scripts": [
         ],
@@ -90,6 +93,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Scientific/Engineering :: GIS",
     ],
     keywords="hydrography ocean mapping",
