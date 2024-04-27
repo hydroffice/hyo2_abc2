@@ -1,5 +1,5 @@
 import unittest
-import platform
+import sys
 
 from PySide6 import QtCore, QtWidgets, QtTest
 
@@ -8,6 +8,7 @@ from hyo2.abc2.app.browser.browser import Browser
 
 class TestAppBrowserBrowser(unittest.TestCase):
 
+    @unittest.skipIf(sys.platform == "linux", "Skip QWebEngine on Linux")
     def test_change_url(self):
 
         if not QtWidgets.QApplication.instance():
@@ -21,6 +22,7 @@ class TestAppBrowserBrowser(unittest.TestCase):
         w.change_url(new_url)
         self.assertEqual(new_url, w.url())
 
+    @unittest.skipIf(sys.platform == "linux", "Skip QWebEngine on Linux")
     def test_type_url(self):
 
         if not QtWidgets.QApplication.instance():

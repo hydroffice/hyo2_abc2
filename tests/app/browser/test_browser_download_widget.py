@@ -1,12 +1,13 @@
 import unittest
+import sys
 
-from PySide6 import QtCore, QtWidgets, QtTest, QtWebEngineWidgets
+from PySide6 import QtWidgets, QtWebEngineWidgets
 
 from hyo2.abc2.app.browser.download_widget import DownloadWidget
 
 
 class TestAppBrowserDownloadWidget(unittest.TestCase):
-
+    @unittest.skipIf(sys.platform == "linux", "Skip QWebEngine on Linux")
     def test_download(self):
 
         if not QtWidgets.QApplication.instance():
