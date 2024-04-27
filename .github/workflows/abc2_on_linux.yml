@@ -24,6 +24,7 @@ jobs:
         conda config --add channels conda-forge
         conda install appdirs cartopy gdal matplotlib-base numpy psutil pyproj qt-material
         pip install PySide6
+        apt install libegl1
         pip install --no-deps .
     - name: Lint with flake8
       run: |

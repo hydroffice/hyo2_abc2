@@ -6,6 +6,14 @@ HydrOffice ABC
 
 |
 
+.. image:: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_windows.yml/badge.svg
+    :target: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_windows.yml
+    :alt: Windows
+
+.. image:: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_linux.yml/badge.svg
+    :target: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_linux.yml
+    :alt: Linux
+
 .. image:: https://img.shields.io/badge/docs-latest-brightgreen.svg
     :target: https://www.hydroffice.org/manuals/abc2/index.html
     :alt: Latest Documentation
