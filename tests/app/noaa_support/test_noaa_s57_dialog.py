@@ -1,5 +1,6 @@
 import os
 import unittest
+import sys
 
 from PySide6 import QtWidgets
 
@@ -10,7 +11,7 @@ from hyo2.abc2.app.pkg_info import app_info
 
 class TestAppNOAAS57Dialog(unittest.TestCase):
 
-    # @unittest.skipIf(platform.system() in ['Linux', ], "It crashes on Linux")
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])

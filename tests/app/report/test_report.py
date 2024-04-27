@@ -1,5 +1,6 @@
 import os
 import unittest
+import sys
 
 from PySide6 import QtWidgets
 
@@ -14,7 +15,7 @@ class TestABCLibReport(unittest.TestCase):
         root_folder = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir)
         cls.testing = Testing(root_folder=root_folder)
 
-    # @unittest.skipIf(platform.system() in ['Linux', ], "It crashes on Linux")
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_init(self):
 
         # noinspection PyArgumentList

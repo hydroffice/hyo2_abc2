@@ -1,5 +1,5 @@
-import platform
 import unittest
+import sys
 
 from PySide6 import QtWidgets
 
@@ -9,7 +9,7 @@ from hyo2.abc2.app.pkg_info.pkg_info_tab import PkgInfoTab
 
 class TestAppTabsPkgInfoTab(unittest.TestCase):
 
-    @unittest.skipIf(platform.system() in ['Linux', ], "It crashes on Linux")
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_show(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])

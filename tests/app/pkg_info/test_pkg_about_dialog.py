@@ -1,4 +1,5 @@
 import unittest
+import sys
 
 from PySide6 import QtWidgets
 
@@ -11,7 +12,7 @@ from hyo2.abc2.app.pkg_info.pkg_about.tabs.local_environment_tab import LocalEnv
 
 
 class TestAppPkgAboutDialog(unittest.TestCase):
-
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
 
         if not QtWidgets.QApplication.instance():
@@ -22,6 +23,7 @@ class TestAppPkgAboutDialog(unittest.TestCase):
         d.switch_visible()
         d.switch_visible()
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_with_all_tabs(self):
 
         if not QtWidgets.QApplication.instance():
