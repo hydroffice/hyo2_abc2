@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class GdalInfoTab(QtWidgets.QWidget):
 
-    def __init__(self, parent: QtWidgets.QWidget=None):
+    def __init__(self, parent: QtWidgets.QWidget = None):
         super().__init__(parent)
 
         self.layout = QtWidgets.QVBoxLayout()

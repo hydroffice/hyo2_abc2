@@ -2,9 +2,9 @@ from PySide6 import QtCore, QtWidgets
 import traceback
 import logging
 
-logger = logging.getLogger(__name__)
-
 from hyo2.abc2.lib.progress.abstract_progress import AbstractProgress
+
+logger = logging.getLogger(__name__)
 
 
 class QtProgress(AbstractProgress):

@@ -45,7 +45,11 @@ class NOAASupport:
 
     def unzip_internal_zip(self):
 
-        if not self.delete_local_noaa_support_files():
+        try:
+            self.delete_local_noaa_support_files()
+
+        except Exception as e:
+            logger.warning("unable to delete the local files: %s" % e)
             return False
 
         try:
@@ -74,46 +78,6 @@ class NOAASupport:
             logger.warning("unable to unzip the file: %s, %s" % (self.internal_zip_path(), e))
             return False
 
-    # download
-
-    def download_from_noaa(self):
-        """try to download the data set"""
-        logger.debug('downloading NOAA Caris Support Files from NOAA FTP')
-
-        if not self.delete_local_noaa_support_files():
-            return False
-
-        try:
-            # ftp.ocsftp.ncd.noaa.gov
-            ftp = Ftp("205.156.4.84", show_progress=True, debug_mode=False,
-                      progress=self.progress)
-            data_zip_src = "HSD/Customization_Files/CARIS/Caris_Support_Files_%s.zip" % self.v_version()
-            ftp.get_file(data_zip_src, self.local_zip_path, unzip_it=True)
-            return self.local_noaa_support_folder_present()
-
-        except Exception as e:
-            traceback.print_exc()
-            logger.error('during download and unzip: %s' % e)
-            return False
-
-    def download_from_unh(self):
-        """try to download the data set"""
-        logger.debug('downloading NOAA Caris Support Files from UNH FTP')
-
-        if not self.delete_local_noaa_support_files():
-            return False
-
-        try:
-            ftp = Ftp("ftp.ccom.unh.edu", show_progress=True, debug_mode=False,
-                      progress=self.progress)
-            data_zip_src = "fromccom/hydroffice/Caris_Support_Files_%s.zip" % self.v_version()
-            ftp.get_file(data_zip_src, self.local_zip_path, unzip_it=True)
-            return self.local_noaa_support_folder_present()
-
-        except Exception as e:
-            logger.error('during WOA09 download and unzip: %s' % e)
-            return False
-
     # local folder
 
     def local_noaa_support_folder(self):
@@ -136,13 +100,8 @@ class NOAASupport:
 
     def delete_local_noaa_support_files(self):
 
-        try:
-            if os.path.exists(self.local_zip_path):
-                os.remove(self.local_zip_path)
-
-        except Exception as e:
-            logger.error('during cleaning zip archive: %s' % e)
-            return False
+        if os.path.exists(self.local_zip_path):
+            os.remove(self.local_zip_path)
 
         for folder in os.listdir(PkgHelper(pkg_info=self._ai).pkg_folder()):
 
@@ -152,19 +111,14 @@ class NOAASupport:
 
             if ("Caris_Support_Files_%s" % self.v_version()) in folder:
 
-                try:
-                    # remove all the content
-                    for root, dirs, files in os.walk(candidate_path, topdown=False):
-                        for name in files:
-                            os.remove(os.path.join(root, name))
-                        for name in dirs:
-                            os.rmdir(os.path.join(root, name))
+                # remove all the content
+                for root, dirs, files in os.walk(candidate_path, topdown=False):
+                    for name in files:
+                        os.remove(os.path.join(root, name))
+                    for name in dirs:
+                        os.rmdir(os.path.join(root, name))
 
-                    os.rmdir(candidate_path)
-
-                except Exception as e:
-                    logger.error('during cleaning folder %s: %s' % (candidate_path, e))
-                    return False
+                os.rmdir(candidate_path)
 
         return True
 

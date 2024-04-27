@@ -51,7 +51,7 @@ class NOAAS57Dialog(QtWidgets.QDialog):
         logo = QtWidgets.QLabel()
         logo.setText("""
         These support files are required to visualize<br>
-        the .000 outputs in CARIS apps.<br> 
+        the .000 outputs in CARIS apps.<br>
         Execute the 3 steps in order.<br>
         Step #3 requires admin privileges.
         """)
@@ -134,18 +134,6 @@ class NOAAS57Dialog(QtWidgets.QDialog):
 
             success = noaa_support.unzip_internal_zip()
             logger.debug("installed internal zip: %s" % success)
-            if success:
-                unzipped = True
-
-        if not unzipped:
-            success = noaa_support.download_from_noaa()
-            logger.debug("download from noaa: %s" % success)
-            if success:
-                unzipped = True
-
-        if not unzipped:
-            success = noaa_support.download_from_unh()
-            logger.debug("download from unh: %s" % success)
             if success:
                 unzipped = True
 

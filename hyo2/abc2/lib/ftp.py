@@ -209,6 +209,6 @@ class Ftp:
                     if self.progress:
                         self.progress.end()
 
-            except:
+            except Exception:
                 traceback.print_exc()
                 raise RuntimeError("unable to unzip the downloaded file: %s" % file_dst)

@@ -9,7 +9,6 @@ from hyo2.abc2.lib.logging import set_logging
 logger = logging.getLogger(__name__)
 set_logging(ns_list=["hyo2.abc2"])
 
-use_setup = 0  # 0: internal, 1: NOAA, 2: CCOM
 delete_local_folder = False
 copy_files = True
 
@@ -19,29 +18,13 @@ w.show()
 
 noaa_support = NOAASupport(app_info=app_info, progress=QtProgress(parent=w))
 
-if use_setup == 0:
 
-    if noaa_support.internal_zip_path_exists():
-        internal_zip_path = noaa_support.internal_zip_path()
-        logger.debug("internal zip: %s" % internal_zip_path)
+if noaa_support.internal_zip_path_exists():
+    internal_zip_path = noaa_support.internal_zip_path()
+    logger.debug("internal zip: %s" % internal_zip_path)
 
-        success = noaa_support.unzip_internal_zip()
-        logger.debug("installed internal zip: %s" % success)
-        if not success:
-            exit(-1)
-
-
-elif use_setup == 1:  # 5.8 is now 7z, thus this fails
-
-    success = noaa_support.download_from_noaa()
-    logger.debug("download from noaa: %s" % success)
-    if not success:
-        exit(-1)
-
-elif use_setup == 2:  # 5.8 not uploaded
-
-    success = noaa_support.download_from_unh()
-    logger.debug("download from unh: %s" % success)
+    success = noaa_support.unzip_internal_zip()
+    logger.debug("installed internal zip: %s" % success)
     if not success:
         exit(-1)
 

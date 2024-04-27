@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class LicenseTab(QtWidgets.QWidget):
 
-    def __init__(self, app_info: PkgInfo, parent: QtWidgets.QWidget=None):
+    def __init__(self, app_info: PkgInfo, parent: QtWidgets.QWidget = None):
         super().__init__(parent)
         self._ai = app_info
 
