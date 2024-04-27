@@ -34,7 +34,7 @@ class TestAppPkgAboutDialog(unittest.TestCase):
 
 
 class TestAppPkgAboutDialogGeneralInfoTab(unittest.TestCase):
-
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])
@@ -45,6 +45,7 @@ class TestAppPkgAboutDialogGeneralInfoTab(unittest.TestCase):
 
 class TestAppPkgAboutDialogLicenseTab(unittest.TestCase):
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])
@@ -55,6 +56,7 @@ class TestAppPkgAboutDialogLicenseTab(unittest.TestCase):
 
 class TestAppPkgAboutDialogLocalEnvironmentTab(unittest.TestCase):
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])
@@ -65,6 +67,7 @@ class TestAppPkgAboutDialogLocalEnvironmentTab(unittest.TestCase):
 
 class TestAppPkgAboutDialogGdalInfoTab(unittest.TestCase):
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_visibility(self):
         if not QtWidgets.QApplication.instance():
             QtWidgets.QApplication([])

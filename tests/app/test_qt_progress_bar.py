@@ -1,5 +1,6 @@
 import time
 import unittest
+import sys
 from PySide6 import QtWidgets
 
 from hyo2.abc2.app.qt_progress import QtProgress
@@ -7,6 +8,7 @@ from hyo2.abc2.app.qt_progress import QtProgress
 
 class TestABCAppQtProgress(unittest.TestCase):
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
     def test_run(self):
 
         # noinspection PyArgumentList

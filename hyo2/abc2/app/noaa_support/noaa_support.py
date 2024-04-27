@@ -1,14 +1,12 @@
 import ctypes
 import os
 import shutil
-import traceback
 import zipfile
 import logging
 
 from hyo2.abc2.lib.progress.cli_progress import CliProgress
 from hyo2.abc2.lib.package.pkg_info import PkgInfo
 from hyo2.abc2.lib.package.pkg_helper import PkgHelper
-from hyo2.abc2.lib.ftp import Ftp
 
 logger = logging.getLogger(__name__)
 
