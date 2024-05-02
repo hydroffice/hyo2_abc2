@@ -132,25 +132,30 @@ class GdalAux:
         cls.error_loaded = True
 
     @classmethod
-    def check_gdal_data(cls):
+    def check_gdal_data(cls, verbose: bool = False) -> None:
         """ Check the correctness of os env GDAL_DATA """
 
         if cls.gdal_data_fixed:
+            if verbose:
+                logger.debug("already set GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             return
 
         if 'GDAL_DATA' in os.environ:
-            # logger.debug("unset original GDAL_DATA = %s" % os.environ['GDAL_DATA'])
+            if verbose:
+                logger.debug("unset original GDAL_DATA = %s" % os.environ['GDAL_DATA'])
             del os.environ['GDAL_DATA']
 
         if 'GDAL_DRIVER_PATH' in os.environ:
-            # logger.debug("unset original GDAL_DRIVER_PATH = %s" % os.environ['GDAL_DRIVER_PATH'])
+            if verbose:
+                logger.debug("unset original GDAL_DRIVER_PATH = %s" % os.environ['GDAL_DRIVER_PATH'])
             del os.environ['GDAL_DRIVER_PATH']
 
         gdal_data_path0 = os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal')
         s57_agencies_csv_path0 = os.path.join(gdal_data_path0, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path0):
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path0)
-            # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+            if verbose:
+                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
             cls.push_gdal_error_handler()
             return
@@ -159,7 +164,8 @@ class GdalAux:
         s57_agencies_csv_path1 = os.path.join(gdal_data_path1, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path1):
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path1)
-            # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+            if verbose:
+                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
             cls.push_gdal_error_handler()
             return
@@ -169,7 +175,8 @@ class GdalAux:
         s57_agencies_csv_path2 = os.path.join(gdal_data_path2, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path2):
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path2)
-            # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+            if verbose:
+                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
             cls.push_gdal_error_handler()
             return
@@ -179,7 +186,8 @@ class GdalAux:
         s57_agencies_csv_path3 = os.path.join(gdal_data_path3, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path3):
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path3)
-            # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+            if verbose:
+                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
             cls.push_gdal_error_handler()
             return
@@ -189,7 +197,8 @@ class GdalAux:
         s57_agencies_csv_path4 = os.path.join(gdal_data_path4, 's57agencies.csv')
         if os.path.exists(s57_agencies_csv_path4):
             gdal.SetConfigOption('GDAL_DATA', gdal_data_path4)
-            # logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+            if verbose:
+                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             cls.gdal_data_fixed = True
             cls.push_gdal_error_handler()
             return
@@ -200,21 +209,25 @@ class GdalAux:
                            % (gdal_data_path0, gdal_data_path1, gdal_data_path2, gdal_data_path3, gdal_data_path4))
 
     @classmethod
-    def check_proj4_data(cls):
+    def check_proj4_data(cls, verbose: bool = False) -> None:
         """ Check the correctness of os env PROJ_LIB """
 
         if cls.proj4_data_fixed:
+            if verbose:
+                logger.debug("already set PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             return
 
         if hasattr(pyproj, 'pyproj_datadir'):
             # noinspection PyTypeChecker
             proj_path = os.path.join(pyproj.pyproj_datadir, "epsg")
             if os.path.exists(proj_path):
-                # logger.debug("PROJ_LIB = %s" % proj_path)
+                if verbose:
+                    logger.debug("PROJ_LIB = %s" % proj_path)
                 return
 
         if 'PROJ_LIB' in os.environ:
-            # logger.debug("unset original PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("unset original PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             del os.environ['PROJ_LIB']
 
         proj4_data_path1 = os.path.join(os.path.dirname(pyproj.__file__), 'data')
@@ -224,7 +237,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path1
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path1
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -236,7 +250,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path2
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path2
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -248,7 +263,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path3
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path3
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -260,7 +276,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path4
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path4
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -272,7 +289,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path5
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path5
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -284,7 +302,8 @@ class GdalAux:
             os.environ['PROJ_LIB'] = proj4_data_path6
             if hasattr(pyproj, 'pyproj_datadir'):
                 pyproj.pyproj_datadir = proj4_data_path6
-            # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+            if verbose:
+                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             cls.proj4_data_fixed = True
             return
 
@@ -301,7 +320,8 @@ class GdalAux:
                 os.environ['PROJ_LIB'] = proj4_data_path999
                 if hasattr(pyproj, 'pyproj_datadir'):
                     pyproj.pyproj_datadir = proj4_data_path999
-                # logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+                if verbose:
+                    logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
                 cls.proj4_data_fixed = True
                 return
 
