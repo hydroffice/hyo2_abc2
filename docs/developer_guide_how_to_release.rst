@@ -37,7 +37,7 @@ PyPi
 Some instructions can be found `here <https://packaging.python.org/tutorials/packaging-projects/>`_:
 
 * ``pip install --upgrade build``
-* ``py -m build``
+* ``python -m build``
 * ``pip install --upgrade twine``
 * ``twine upload --repository pypi dist/*``
 

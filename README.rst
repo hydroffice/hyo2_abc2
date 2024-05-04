@@ -1,10 +1,14 @@
-HydrOffice ABC
-==============
+HydrOffice ABC 2
+================
 
 .. image:: https://github.com/hydroffice/hyo2_abc2/raw/master/hyo2/abc2/app/pkg_info/media/app_icon.png
     :alt: logo
 
 |
+
+.. image:: https://img.shields.io/pypi/v/hyo2.abc2.svg
+    :target: https://pypi.python.org/pypi/hyo2.abc2
+    :alt: PyPi version
 
 .. image:: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_windows.yml/badge.svg
     :target: https://github.com/hydroffice/hyo2_abc2/actions/workflows/abc2_on_windows.yml
