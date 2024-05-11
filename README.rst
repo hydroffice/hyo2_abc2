@@ -49,20 +49,18 @@ The ABC package provides common elements for HydrOffice libraries and applicatio
 
 Main library features:
 
-* A LibInfo class (to collect info about the library)
+* A PkgInfo class (to collect info about the library and the app)
 * Helper class
 * A GDAL Aux class (to help with GDAL handling)
 * CLI Progress Bar class
 
 Main GUI features:
 
-* An AppInfo class (to collect info about the app)
 * An AppStyle class (to manage app styles)
 * A Browser widget
-* An Info tab
-* An Exception dialog
-* An About dialog
-* A Qt-based Progress Bar class
+* An S57 NOAA Support Files app
+* A Package Info app (with Exception dialog, About dialog and Qt-based Progress Bar class)
+* A report tool
 
 |
 
