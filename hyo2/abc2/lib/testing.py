@@ -34,7 +34,7 @@ class Testing:
             os.makedirs(folder)
         return folder
 
-    def input_data_sub_folders(self) -> list:
+    def input_data_sub_folders(self) -> list[str]:
         """Return a list of sub-folders under the input folder"""
         folder_list = list()
         list_dir = os.listdir(self.input_data_folder())
@@ -55,6 +55,16 @@ class Testing:
         if not os.path.exists(folder):
             os.makedirs(folder)
         return folder
+
+    def temp_data_sub_folders(self) -> list[str]:
+        """Return a list of sub-folders under the input folder"""
+        folder_list = list()
+        list_dir = os.listdir(self.temp_data_folder())
+        for element in list_dir:
+            element_path = os.path.join(self.temp_data_folder(), element)
+            if os.path.isdir(element_path):
+                folder_list.append(element_path)
+        return folder_list
 
     def output_data_folder(self) -> str:
         folder = os.path.abspath(os.path.join(self.root_data_folder(), 'output'))
