@@ -115,7 +115,8 @@ class Report:
         # prepare some drawing tools
         blue_pen = QtGui.QPen(QtGui.QColor(30, 30, 255))
         red_pen = QtGui.QPen(QtGui.QColor(255, 30, 30))
-        orange_pen = QtGui.QPen(QtGui.QColor(255, 165, 30))
+        orange_pen = QtGui.QPen(QtGui.QColor(219, 116, 26))
+        magenta_pen = QtGui.QPen(QtGui.QColor(102, 0, 204))
         green_pen = QtGui.QPen(QtGui.QColor(30, 200, 30))
         gray_pen = QtGui.QPen(QtGui.QColor(120, 120, 120))
         black_pen = QtGui.QPen(QtGui.QColor(30, 30, 30))
@@ -280,7 +281,12 @@ class Report:
 
                 if int(last_item) > 0:  # troubles -> red pen
                     if use_colors:
-                        painter.setPen(red_pen)
+                        if "warning" in content_item.lower():
+                            painter.setPen(orange_pen)
+                        elif "info" in content_item.lower():
+                            painter.setPen(magenta_pen)
+                        else:
+                            painter.setPen(red_pen)
                     painter.drawText(row_area, lc_flags, "- " + content_item)
                     if use_colors:
                         painter.setPen(black_pen)
@@ -367,16 +373,23 @@ class Report:
                     painter.setPen(black_pen)
 
             else:
-                if first_item == "[WARNING]":
+                if first_item == "[ERROR]":
+                    if use_colors:
+                        painter.setPen(red_pen)
+                    painter.drawText(row_area, lc_flags, content_item)
+                    if use_colors:
+                        painter.setPen(black_pen)
+
+                elif first_item == "[WARNING]":
                     if use_colors:
                         painter.setPen(orange_pen)
                     painter.drawText(row_area, lc_flags, content_item)
                     if use_colors:
                         painter.setPen(black_pen)
 
-                elif first_item == "[ERROR]":
+                elif first_item == "[INFO]":
                     if use_colors:
-                        painter.setPen(red_pen)
+                        painter.setPen(magenta_pen)
                     painter.drawText(row_area, lc_flags, content_item)
                     if use_colors:
                         painter.setPen(black_pen)

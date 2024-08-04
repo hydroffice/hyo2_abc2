@@ -35,6 +35,8 @@ r += "An issue"
 
 r += "Total [TOTAL]"
 r += "Issues: 3"
+r += "Warnings: 3"
+r += "Info messages: 3"
 r += "Issues: 3 [SKIP_REP]"
 
 r.generate_pdf(path=output_pdf, title="Test Report", use_colors=True)
