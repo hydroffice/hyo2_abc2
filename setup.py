@@ -1,6 +1,7 @@
 import codecs
 import os
 import re
+import subprocess
 
 from setuptools import setup, find_packages
 
@@ -26,6 +27,11 @@ def find_version(*file_paths):
 
     raise RuntimeError("Unable to find version string.")
 
+gdal = 'gdal'
+try:
+    gdal='gdal=='+subprocess.run(['gdal-config', '--version'], capture_output=True, text=True).stdout.strip()
+except Exception:
+    pass
 
 # ------------------------------------------------------------------
 #                          POPULATE SETUP
@@ -61,7 +67,7 @@ setup(
     ],
     install_requires=[
         "appdirs",
-        "gdal",
+        gdal,
         "matplotlib",
         "numpy",
         "psutil",
