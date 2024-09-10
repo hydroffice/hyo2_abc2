@@ -1,5 +1,6 @@
 import logging
 import os
+import subprocess
 from typing import Optional
 
 import pyproj
@@ -140,9 +141,11 @@ class GdalAux:
                 logger.debug("already set GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
             return
 
+        saved_gdal_data = None
         if 'GDAL_DATA' in os.environ:
             if verbose:
                 logger.debug("unset original GDAL_DATA = %s" % os.environ['GDAL_DATA'])
+            saved_gdal_data = os.environ['GDAL_DATA']
             del os.environ['GDAL_DATA']
 
         if 'GDAL_DRIVER_PATH' in os.environ:
@@ -150,63 +153,40 @@ class GdalAux:
                 logger.debug("unset original GDAL_DRIVER_PATH = %s" % os.environ['GDAL_DRIVER_PATH'])
             del os.environ['GDAL_DRIVER_PATH']
 
-        gdal_data_path0 = os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal')
-        s57_agencies_csv_path0 = os.path.join(gdal_data_path0, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path0):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path0)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
+        candidate_gdal_data_paths = []
 
-        gdal_data_path1 = os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal')
-        s57_agencies_csv_path1 = os.path.join(gdal_data_path1, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path1):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path1)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
-
+        candidate_gdal_data_paths.append(os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal'))
+        candidate_gdal_data_paths.append(os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal'))
         # anaconda specific (Win)
-        gdal_data_path2 = os.path.join(PkgHelper.python_path(), 'Library', 'data')
-        s57_agencies_csv_path2 = os.path.join(gdal_data_path2, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path2):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path2)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
-
+        candidate_gdal_data_paths.append(os.path.join(PkgHelper.python_path(), 'Library', 'data'))
         # anaconda specific (Win)
-        gdal_data_path3 = os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal')
-        s57_agencies_csv_path3 = os.path.join(gdal_data_path3, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path3):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path3)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
-
+        candidate_gdal_data_paths.append(os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal'))
         # anaconda specific (Linux)
-        gdal_data_path4 = os.path.join(PkgHelper.python_path(), 'share', 'gdal')
-        s57_agencies_csv_path4 = os.path.join(gdal_data_path4, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path4):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path4)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
+        candidate_gdal_data_paths.append(os.path.join(PkgHelper.python_path(), 'share', 'gdal'))
+
+        try:
+            candidate_gdal_data_paths.append(subprocess.run(['gdal-config', '--datadir'], capture_output=True, text=True).stdout.strip())
+        except Exception as e:
+            logger.warning("%s" % e)
 
         # TODO: add more cases to find GDAL_DATA
 
-        raise RuntimeError("Unable to locate GDAL data at:\n- %s\n- %s\n- %s\n- %s\n- %s"
-                           % (gdal_data_path0, gdal_data_path1, gdal_data_path2, gdal_data_path3, gdal_data_path4))
+        if saved_gdal_data is not None:
+            candidate_gdal_data_paths.append(saved_gdal_data)
+
+        for gdal_data_path in candidate_gdal_data_paths:
+            s57_agencies_csv_path = os.path.join(gdal_data_path, 's57agencies.csv')
+            if os.path.exists(s57_agencies_csv_path):
+                gdal.SetConfigOption('GDAL_DATA', gdal_data_path)
+                if verbose:
+                    logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+                cls.gdal_data_fixed = True
+                cls.push_gdal_error_handler()
+                return
+
+
+        raise RuntimeError("Unable to locate GDAL data at:\n- %s\n"
+                           % ("\n- ".join(candidate_gdal_data_paths)))
 
     @classmethod
     def check_proj4_data(cls, verbose: bool = False) -> None:
@@ -216,6 +196,14 @@ class GdalAux:
             if verbose:
                 logger.debug("already set PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             return
+        
+        try:
+            proj_path = pyproj.datadir.get_data_dir()
+            if verbose:
+                logger.debug("pyproj data dir = %s" % proj_path)
+            return
+        except Exception as e:
+            logger.warning("%s" % e)
 
         if hasattr(pyproj, 'pyproj_datadir'):
             # noinspection PyTypeChecker
