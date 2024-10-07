@@ -165,7 +165,7 @@ class GdalAux:
         candidate_gdal_data_paths.append(os.path.join(PkgHelper.python_path(), 'share', 'gdal'))
 
         try:
-            candidate_gdal_data_paths.append(subprocess.run(['gdal-config', '--datadir'], capture_output=True, text=True).stdout.strip())
+            candidate_gdal_data_paths.append(subprocess.run(['gdal-config', '--datadir'], capture_output=True, text=True).stdout.strip()) # nosec
         except Exception as e:
             logger.warning("%s" % e)
 
@@ -196,7 +196,7 @@ class GdalAux:
             if verbose:
                 logger.debug("already set PROJ_LIB = %s" % os.environ['PROJ_LIB'])
             return
-        
+
         try:
             proj_path = pyproj.datadir.get_data_dir()
             if verbose:
