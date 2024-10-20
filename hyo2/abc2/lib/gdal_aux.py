@@ -134,88 +134,67 @@ class GdalAux:
 
     @classmethod
     def check_gdal_data(cls, verbose: bool = False) -> None:
-        """ Check the correctness of os env GDAL_DATA """
+        """ Check the correctness of gdal data folder """
 
         if cls.gdal_data_fixed:
             if verbose:
-                logger.debug("already set GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+                logger.debug("already fixed gdal data folder: %s" % gdal.GetConfigOption('GDAL_DATA'))
             return
 
-        if 'GDAL_DATA' in os.environ:
-            if verbose:
-                logger.debug("unset original GDAL_DATA = %s" % os.environ['GDAL_DATA'])
-            del os.environ['GDAL_DATA']
+        # avoid to rely on env vars
+        env_vars = ('GDAL_DATA', 'GDAL_DRIVER_PATH')
+        for env_var in env_vars:
+            if env_var in os.environ:
+                del os.environ[env_var]
+                if verbose:
+                    logger.debug("removed %s env var" % env_var)
 
-        if 'GDAL_DRIVER_PATH' in os.environ:
-            if verbose:
-                logger.debug("unset original GDAL_DRIVER_PATH = %s" % os.environ['GDAL_DRIVER_PATH'])
-            del os.environ['GDAL_DRIVER_PATH']
-
-        gdal_data_path0 = os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal')
-        s57_agencies_csv_path0 = os.path.join(gdal_data_path0, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path0):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path0)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
+        # check if the gdal data folder is already set
+        try:
+            gdal_path = gdal.GetConfigOption('GDAL_DATA')
+            if not os.path.exists(gdal_path):
+                raise RuntimeError("Unable to locate %s" % gdal_path)
             cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
-
-        gdal_data_path1 = os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal')
-        s57_agencies_csv_path1 = os.path.join(gdal_data_path1, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path1):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path1)
             if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
+                logger.debug("already set gdal data folder = %s" % gdal_path)
             return
+        except Exception:
+            logger.info("attempting to fix unset gdal data folder")
 
-        # anaconda specific (Win)
-        gdal_data_path2 = os.path.join(PkgHelper.python_path(), 'Library', 'data')
-        s57_agencies_csv_path2 = os.path.join(gdal_data_path2, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path2):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path2)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
+        cand_data_folders = [
+            os.path.join(os.path.dirname(gdal.__file__), 'data'),
+            os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal'),
+            os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data'),
+            os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal'),
+            os.path.join(PkgHelper.python_path(), 'Library', 'data'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'Library', 'share'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'share'),  # anaconda (Linux)
+            os.path.join(PkgHelper.python_path(), 'share', 'gdal'),  # anaconda (Linux)
+        ]
 
-        # anaconda specific (Win)
-        gdal_data_path3 = os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal')
-        s57_agencies_csv_path3 = os.path.join(gdal_data_path3, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path3):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path3)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
+        # checking each folder
+        for cand_data_folder in cand_data_folders:
 
-        # anaconda specific (Linux)
-        gdal_data_path4 = os.path.join(PkgHelper.python_path(), 'share', 'gdal')
-        s57_agencies_csv_path4 = os.path.join(gdal_data_path4, 's57agencies.csv')
-        if os.path.exists(s57_agencies_csv_path4):
-            gdal.SetConfigOption('GDAL_DATA', gdal_data_path4)
-            if verbose:
-                logger.debug("GDAL_DATA = %s" % gdal.GetConfigOption('GDAL_DATA'))
-            cls.gdal_data_fixed = True
-            cls.push_gdal_error_handler()
-            return
+            s57_agencies_path = os.path.join(cand_data_folder, 's57agencies.csv')
+            if os.path.exists(s57_agencies_path):
 
-        # TODO: add more cases to find GDAL_DATA
+                gdal.SetConfigOption('GDAL_DATA', cand_data_folder)
+                cls.gdal_data_fixed = True
+                cls.push_gdal_error_handler()
+                if verbose:
+                    logger.debug("set gdal data folder = %s" % cand_data_folder)
+                return
 
-        raise RuntimeError("Unable to locate GDAL data at:\n- %s\n- %s\n- %s\n- %s\n- %s"
-                           % (gdal_data_path0, gdal_data_path1, gdal_data_path2, gdal_data_path3, gdal_data_path4))
+        raise RuntimeError("Unable to locate gdal data at:\n%s" % "\n - ".join(cand_data_folders))
 
     @classmethod
     def check_proj4_data(cls, verbose: bool = False) -> None:
-        """ Check the correctness of os env PROJ_LIB """
+        """ Check the correctness of proj data folder """
 
         if cls.proj4_data_fixed:
             if verbose:
-                logger.debug("already fixed proj data folder = %s" % pyproj.datadir.get_data_dir())
+                logger.debug("already fixed proj data folder: %s" % pyproj.datadir.get_data_dir())
             return
 
         # avoid to rely on env vars
@@ -237,7 +216,7 @@ class GdalAux:
             logger.info("attempting to fix unset proj data folder")
 
         # list all the potential proj data folders
-        cand_proj_data_folders = [
+        cand_data_folders = [
             os.path.join(os.path.dirname(pyproj.__file__), 'data'),
             os.path.join(PkgHelper.python_path(), 'Library', 'data'),  # anaconda (Win)
             os.path.join(PkgHelper.python_path(), 'Library', 'share'),  # anaconda (Win)
@@ -247,18 +226,18 @@ class GdalAux:
         ]
 
         # checking each folder
-        for cand_proj_data_folder in cand_proj_data_folders:
+        for cand_data_folder in cand_data_folders:
 
-            epsg_path = os.path.join(cand_proj_data_folder, 'proj.db')
-            if os.path.exists(epsg_path):
+            proj_db_path = os.path.join(cand_data_folder, 'proj.db')
+            if os.path.exists(proj_db_path):
 
-                pyproj.datadir.set_data_dir(cand_proj_data_folder)
+                pyproj.datadir.set_data_dir(cand_data_folder)
                 cls.proj4_data_fixed = True
                 if verbose:
-                    logger.debug("set proj data folder = %s" % cand_proj_data_folder)
+                    logger.debug("set proj data folder = %s" % cand_data_folder)
                 return
 
-        raise RuntimeError("Unable to locate PROJ4 data at: %s" % ", ".join(cand_proj_data_folders))
+        raise RuntimeError("Unable to locate proj data at:\n%s" % "\n - ".join(cand_data_folders))
 
     @classmethod
     def crs_id(cls, wkt: str) -> Optional[int]:

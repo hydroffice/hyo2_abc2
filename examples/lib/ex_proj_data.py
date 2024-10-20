@@ -1,8 +1,6 @@
 import logging
 import os
 
-import pyproj
-
 from hyo2.abc2.lib.gdal_aux import GdalAux
 from hyo2.abc2.lib.logging import set_logging
 
