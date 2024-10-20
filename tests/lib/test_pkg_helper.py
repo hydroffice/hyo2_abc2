@@ -33,6 +33,21 @@ class TestABCLibPkgHelper(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             PkgHelper.first_match(a_dict, 2)
 
+    def test_hstb_folders(self):
+        if PkgHelper.is_pydro():
+            self.assertTrue(os.path.exists(PkgHelper.hstb_folder()))
+            self.assertTrue(os.path.exists(PkgHelper.hstb_atlases_folder()))
+            self.assertTrue(os.path.exists(PkgHelper.hstb_woa09_folder()))
+            self.assertTrue(os.path.exists(PkgHelper.hstb_woa13_folder()))
+            self.assertTrue(os.path.exists(PkgHelper.hstb_woa18_folder()))
+
+        else:
+            self.assertRaises(RuntimeError, PkgHelper.hstb_folder)
+            self.assertRaises(RuntimeError, PkgHelper.hstb_atlases_folder)
+            self.assertRaises(RuntimeError, PkgHelper.hstb_woa09_folder)
+            self.assertRaises(RuntimeError, PkgHelper.hstb_woa13_folder)
+            self.assertRaises(RuntimeError, PkgHelper.hstb_woa18_folder)
+
     def test_is_64bit_os(self):
         self.assertIsInstance(self.h.is_64bit_os(), bool)
 
@@ -66,6 +81,9 @@ class TestABCLibPkgHelper(unittest.TestCase):
 
     def test_hydroffice_folder(self):
         self.assertTrue(os.path.exists(self.h.hydroffice_folder()))
+
+    def test_is_script_already_running(self):
+        self.assertFalse(self.h.is_script_already_running())
 
 
 def suite():

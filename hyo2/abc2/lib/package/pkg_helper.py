@@ -85,7 +85,7 @@ class PkgHelper:
         # noinspection PyUnresolvedReferences
         from HSTB.explorer import __file__ as hstb_explorer_file
 
-        return os.path.abspath(os.path.join(os.path.dirname(hstb_explorer_file), os.pathsep))
+        return os.path.abspath(os.path.join(os.path.dirname(hstb_explorer_file)))
 
     @classmethod
     def hstb_woa09_folder(cls) -> str:
