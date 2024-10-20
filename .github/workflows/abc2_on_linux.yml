@@ -39,5 +39,6 @@ jobs:
         pip install coveralls PyYAML pytest pytest-cov
         py.test --cov
         coverage report -m
-        coveralls
+        # disabled linux reports to avoid mixing with windows ones
+        # coveralls
       continue-on-error: false
