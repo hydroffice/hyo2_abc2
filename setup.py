@@ -56,7 +56,6 @@ setup(
     zip_safe=False,
     setup_requires=[
         "setuptools",
-        "wheel",
         "coverage"
     ],
     install_requires=[
