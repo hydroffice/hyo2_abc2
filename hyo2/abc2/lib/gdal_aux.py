@@ -357,15 +357,3 @@ class GdalAux:
                 return 37
 
         return int((long + 180) / 6) + 1
-
-    @classmethod
-    def save_prj_file(cls, output_path: str, ds: gdal.Dataset) -> bool:
-        src_srs = osr.SpatialReference()
-        src_srs.ImportFromWkt(ds.GetProjection())
-        src_srs.MorphToESRI()
-        src_wkt = src_srs.ExportToWkt()
-
-        prj_file = open(os.path.splitext(output_path)[0] + '.prj', 'wt')
-        prj_file.write(src_wkt)
-        prj_file.close()
-        return True

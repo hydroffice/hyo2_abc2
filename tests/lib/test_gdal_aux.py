@@ -13,7 +13,8 @@ class TestABCLibHelper(unittest.TestCase):
         self.tp = Testing(root_folder=root_folder)
 
     def test_gdal_version(self):
-        GdalAux.current_gdal_version()
+        vers = GdalAux.current_gdal_version()
+        self.assertGreater(vers, 0)
 
     def test_create_ogr_data_source(self):
         for ogr_format in GdalAux.ogr_formats.keys():
@@ -27,8 +28,21 @@ class TestABCLibHelper(unittest.TestCase):
             self.assertIsNotNone(lyr)
             output_ds = None
 
+    def test_list_ogr_drivers(self):
+        GdalAux.list_ogr_drivers()
+
+    def test_push_gdal_error_handler(self):
+        GdalAux.push_gdal_error_handler()
+
     def test_gdal_data(self):
-        GdalAux.check_gdal_data()
+        GdalAux.check_gdal_data(verbose=True)
+
+    def test_proj4_data(self):
+        GdalAux.check_proj4_data(verbose=True)
+
+    def test_lat_long_to_zone_number(self):
+        zone = GdalAux.lat_long_to_zone_number(43.13555, -70.9395)
+        self.assertEqual(zone, 19)
 
     def test_crs_id(self):
         wkt = """
