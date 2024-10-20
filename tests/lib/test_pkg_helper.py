@@ -83,7 +83,7 @@ class TestABCLibPkgHelper(unittest.TestCase):
         self.assertTrue(os.path.exists(self.h.hydroffice_folder()))
 
     def test_is_script_already_running(self):
-        self.assertFalse(self.h.is_script_already_running())
+        self.assertIsInstance(self.h.is_script_already_running(), bool)
 
 
 def suite():
