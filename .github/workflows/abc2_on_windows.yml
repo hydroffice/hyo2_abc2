@@ -18,7 +18,7 @@ jobs:
     - name: setup-conda
       uses: s-weigand/setup-conda@v1
       with:
-        update-conda: false
+        update-conda: true
         python-version: '3.11'
         conda-channels: 'conda-forge'
     - name: Install dependencies
