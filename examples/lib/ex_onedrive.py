@@ -8,14 +8,24 @@ from hyo2.abc2.lib.onedrive import OneDrive
 logger = logging.getLogger(__name__)
 set_logging(ns_list=["hyo2.abc2"])
 
-# onedrive_link = r"https://universitysystemnh-my.sharepoint.com/:u:/g/personal/" \
-#                 r"gma72_usnh_edu/EaMqI1w9pplDsqCapeqJYYgBo0LP8CqHnkyXlDKkoHeBLg?e=4MEVzV&download=1"
 onedrive_link = r"https://universitysystemnh-my.sharepoint.com/:u:/g/personal/" \
-                r"gma72_usnh_edu/ET4kv3t8CuBGuyHUqThonvMBMmxWp5f3ZTt08XG_u9COHQ?e=mVEJij&download=1"
+                r"gma72_usnh_edu/EabgRi9pTtdEvIVDXoEXHOYBH4FBHtN07i_8VkjpAAstYQ?e=Wn7q98&download=1"
 
 root_folder = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
 tp = Testing(root_folder=root_folder)
-file_dst = os.path.join(tp.output_data_folder(), "onedrive.zip")
+zip_path = os.path.join(tp.output_data_folder(), "test.zip")
+unzip_path = os.path.join(tp.output_data_folder(), "test.txt")
+
+if os.path.exists(zip_path):
+    os.remove(zip_path)
+if os.path.exists(unzip_path):
+    os.remove(unzip_path)
 
 od = OneDrive(show_progress=True, debug_mode=True)
-od.get_file(file_src=onedrive_link, file_dst=file_dst, unzip_it=True)
+od.get_file(file_src=onedrive_link, file_dst=zip_path, unzip_it=True)
+
+if os.path.exists(unzip_path):
+    with open(unzip_path) as fid:
+        text = fid.read().strip()
+        if text == "test":
+            logger.debug(text)

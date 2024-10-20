@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 class OneDrive:
 
-    def __init__(self, show_progress: bool = False, debug_mode: bool = False, progress: AbstractProgress = None):
+    def __init__(self, show_progress: bool = False, debug_mode: bool = False, progress: AbstractProgress = None) \
+            -> None:
         if debug_mode:
             self.debug_level = 2
         else:
@@ -26,14 +27,7 @@ class OneDrive:
         else:
             self.progress = progress
 
-    def get_file(self, file_src: str, file_dst: str, unzip_it: bool = False):
-        """ Retrieve a file
-
-        Args:
-            file_src:           File source
-            file_dst:           File destination
-            unzip_it:           Unzip the retrieved file
-        """
+    def get_file(self, file_src: str, file_dst: str, unzip_it: bool = False) -> None:
 
         file_dst = os.path.abspath(file_dst)
         if os.path.exists(file_dst):

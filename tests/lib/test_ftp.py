@@ -1,8 +1,6 @@
-import os
 import unittest
 
 from hyo2.abc2.lib.ftp import Ftp
-from hyo2.abc2.lib.testing import Testing
 
 
 class TestABCLibFtp(unittest.TestCase):
