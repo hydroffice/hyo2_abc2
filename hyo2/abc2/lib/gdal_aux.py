@@ -3,6 +3,7 @@ import os
 from typing import Optional
 
 import pyproj
+import pyproj.datadir
 from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
@@ -214,125 +215,50 @@ class GdalAux:
 
         if cls.proj4_data_fixed:
             if verbose:
-                logger.debug("already set PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+                logger.debug("already fixed proj data folder = %s" % pyproj.datadir.get_data_dir())
             return
 
-        if hasattr(pyproj, 'pyproj_datadir'):
-            # noinspection PyTypeChecker
-            proj_path = os.path.join(pyproj.pyproj_datadir, "epsg")
-            if os.path.exists(proj_path):
+        # avoid to rely on env vars
+        env_vars = ('PROJ_DATA', 'PROJ_LIB')
+        for env_var in env_vars:
+            if env_var in os.environ:
+                del os.environ[env_var]
                 if verbose:
-                    logger.debug("PROJ_LIB = %s" % proj_path)
-                return
+                    logger.debug("removed %s env var" % env_var)
 
-        if 'PROJ_LIB' in os.environ:
-            if verbose:
-                logger.debug("unset original PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            del os.environ['PROJ_LIB']
-
-        proj4_data_path1 = os.path.join(os.path.dirname(pyproj.__file__), 'data')
-        epsg_path1 = os.path.join(proj4_data_path1, 'epsg')
-        if os.path.exists(epsg_path1):
-
-            os.environ['PROJ_LIB'] = proj4_data_path1
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path1
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
-        # anaconda specific (Win)
-        proj4_data_path2 = os.path.join(PkgHelper.python_path(), 'Library', 'data')
-        epsg_path2 = os.path.join(proj4_data_path2, 'epsg')
-        if os.path.exists(epsg_path2):
-
-            os.environ['PROJ_LIB'] = proj4_data_path2
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path2
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
-        # anaconda specific (Win)
-        proj4_data_path3 = os.path.join(PkgHelper.python_path(), 'Library', 'share')
-        epsg_path3 = os.path.join(proj4_data_path3, 'epsg')
-        if os.path.exists(epsg_path3):
-
-            os.environ['PROJ_LIB'] = proj4_data_path3
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path3
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
-        # anaconda specific (Linux)
-        proj4_data_path4 = os.path.join(PkgHelper.python_path(), 'share')
-        epsg_path4 = os.path.join(proj4_data_path4, 'epsg')
-        if os.path.exists(epsg_path4):
-
-            os.environ['PROJ_LIB'] = proj4_data_path4
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path4
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
-        # anaconda specific (Linux)
-        proj4_data_path5 = os.path.join(PkgHelper.python_path(), 'share', 'proj')
-        proj_db_path5 = os.path.join(proj4_data_path5, 'proj.db')
-        if os.path.exists(proj_db_path5):
-
-            os.environ['PROJ_LIB'] = proj4_data_path5
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path5
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
-        # anaconda specific (Win)
-        proj4_data_path6 = os.path.join(PkgHelper.python_path(), 'Library', 'share', 'proj')
-        proj_db_path6 = os.path.join(proj4_data_path6, 'proj.db')
-        if os.path.exists(proj_db_path6):
-
-            os.environ['PROJ_LIB'] = proj4_data_path6
-            if hasattr(pyproj, 'pyproj_datadir'):
-                pyproj.pyproj_datadir = proj4_data_path6
-            if verbose:
-                logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
-            cls.proj4_data_fixed = True
-            return
-
+        # check if the proj data folder is already set
         try:
-            # noinspection PyUnresolvedReferences
-            import conda
+            proj4_path = pyproj.datadir.get_data_dir()
+            cls.proj4_data_fixed = True
+            if verbose:
+                logger.debug("already set proj data folder = %s" % proj4_path)
+            return
+        except Exception:
+            logger.info("attempting to fix unset proj data folder")
 
-            conda_file_dir = conda.__file__
-            conda_dir = conda_file_dir.split('lib')[0]
-            proj4_data_path999 = os.path.join(os.path.join(conda_dir, 'share'), 'proj')
-            epsg_path999 = os.path.join(proj4_data_path999, 'epsg')
-            if os.path.exists(epsg_path999):
+        # list all the potential proj data folders
+        cand_proj_data_folders = [
+            os.path.join(os.path.dirname(pyproj.__file__), 'data'),
+            os.path.join(PkgHelper.python_path(), 'Library', 'data'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'Library', 'share'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'Library', 'share', 'proj'),  # anaconda (Win)
+            os.path.join(PkgHelper.python_path(), 'share'),  # anaconda (Linux)
+            os.path.join(PkgHelper.python_path(), 'share', 'proj'),  # anaconda (Linux)
+        ]
 
-                os.environ['PROJ_LIB'] = proj4_data_path999
-                if hasattr(pyproj, 'pyproj_datadir'):
-                    pyproj.pyproj_datadir = proj4_data_path999
-                if verbose:
-                    logger.debug("PROJ_LIB = %s" % os.environ['PROJ_LIB'])
+        # checking each folder
+        for cand_proj_data_folder in cand_proj_data_folders:
+
+            epsg_path = os.path.join(cand_proj_data_folder, 'proj.db')
+            if os.path.exists(epsg_path):
+
+                pyproj.datadir.set_data_dir(cand_proj_data_folder)
                 cls.proj4_data_fixed = True
+                if verbose:
+                    logger.debug("set proj data folder = %s" % cand_proj_data_folder)
                 return
 
-        except Exception as e:
-            logger.warning("%s" % e)
-
-        # TODO: add more cases to find PROJ_LIB
-
-        raise RuntimeError("Unable to locate PROJ4 data at:\n- %s\n- %s\n- %s\n- %s\n- %s\n- %s\n- Conda/share/proj"
-                           % (proj4_data_path1, proj4_data_path2, proj4_data_path3, proj4_data_path4, proj4_data_path5,
-                              proj4_data_path6))
+        raise RuntimeError("Unable to locate PROJ4 data at: %s" % ", ".join(cand_proj_data_folders))
 
     @classmethod
     def crs_id(cls, wkt: str) -> Optional[int]:
