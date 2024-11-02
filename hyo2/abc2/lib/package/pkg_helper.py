@@ -3,10 +3,10 @@ import importlib
 import logging
 import os
 import platform
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
-from typing import Optional
 
 import psutil
 from appdirs import user_data_dir
@@ -23,6 +23,38 @@ class PkgHelper:
 
     def __init__(self, pkg_info: PkgInfo):
         self._pi = pkg_info
+
+    @classmethod
+    def clean_folder(cls, folder: str, filter_files: tuple[str] | None, filter_folders: tuple[str] | None) -> None:
+
+        if not os.path.exists(folder):
+            raise RuntimeError("Unable to locate the folder to clean: %s" % folder)
+
+        logger.info("cleaning folder: %s ..." % folder)
+        if not filter_files:
+            filter_files = ()
+        logger.debug("file filters: %s" % (filter_files,))
+        if not filter_folders:
+            filter_folders = ()
+        logger.debug("folder filters: %s" % (filter_folders,))
+
+        for dir_path, dir_names, files in os.walk(folder):
+
+            for d in dir_names:
+
+                if d in filter_folders:
+                    full_path = os.path.join(dir_path, d)
+                    shutil.rmtree(full_path)
+                    logger.debug("deleted folder: %s" % full_path)
+
+            for f in files:
+
+                if f in filter_files:
+                    full_path = os.path.join(dir_path, f)
+                    os.remove(full_path)
+                    logger.debug("deleted file: %s" % full_path)
+
+        logger.info("cleaning folder: %s ... DONE" % folder)
 
     @classmethod
     def explore_folder(cls, path: str) -> bool:
@@ -383,7 +415,7 @@ class PkgHelper:
 
         return msg
 
-    def web_url(self, suffix: Optional[str] = None) -> str:
+    def web_url(self, suffix: str | None = None) -> str:
 
         url = '%s%s' % (self._pi.url, self._pi.version.replace('.', '_'),)
         if self.is_pydro():
