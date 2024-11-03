@@ -376,21 +376,35 @@ class Report:
                 if first_item == "[ERROR]":
                     if use_colors:
                         painter.setPen(red_pen)
-                    painter.drawText(row_area, lc_flags, content_item)
+                    painter.drawText(row_area, lc_flags, content_item[len("[ERROR] "):])
                     if use_colors:
                         painter.setPen(black_pen)
 
                 elif first_item == "[WARNING]":
                     if use_colors:
                         painter.setPen(orange_pen)
-                    painter.drawText(row_area, lc_flags, content_item)
+                    painter.drawText(row_area, lc_flags, content_item[len("[WARNING] "):])
                     if use_colors:
                         painter.setPen(black_pen)
 
                 elif first_item == "[INFO]":
                     if use_colors:
                         painter.setPen(magenta_pen)
-                    painter.drawText(row_area, lc_flags, content_item)
+                    painter.drawText(row_area, lc_flags, content_item[len("[INFO] "):])
+                    if use_colors:
+                        painter.setPen(black_pen)
+
+                elif first_item == "[SKIP]":
+                    if use_colors:
+                        painter.setPen(gray_pen)
+                    painter.drawText(row_area, lc_flags, content_item[len("[SKIP] "):])
+                    if use_colors:
+                        painter.setPen(black_pen)
+
+                elif first_item == "[OK]":
+                    if use_colors:
+                        painter.setPen(gray_pen)
+                    painter.drawText(row_area, lc_flags, content_item[len("[OK] "):])
                     if use_colors:
                         painter.setPen(black_pen)
 

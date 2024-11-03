@@ -26,7 +26,9 @@ r += "Check 1 [CHECK]"
 r += "OK"
 
 r += "Check 2 [CHECK]"
-r += "An issue"
+r += "[SKIP] An issue"
+r += "[ERROR] An issue"
+r += "[WARNING] An issue"
 
 r += "Section 2 [SKIP_SEC]"
 
