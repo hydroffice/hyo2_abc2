@@ -165,6 +165,21 @@ class PkgHelper:
         return folder
 
     @classmethod
+    def hstb_woa23_folder(cls) -> str:
+        if not cls.is_pydro():
+            raise RuntimeError("this method should be called only within a Pydro environment")
+
+        try:
+            # noinspection PyUnresolvedReferences
+            import WOA23
+            folder = WOA23.__path__[0]
+        except ImportError:
+            folder = os.path.join(cls.hstb_atlases_folder(), "woa23")
+            if not os.path.exists(folder):
+                os.mkdir(folder)
+        return folder
+
+    @classmethod
     def is_64bit_os(cls) -> bool:
         """ Check if the current OS is at 64 bits """
         return platform.machine().endswith('64')
