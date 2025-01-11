@@ -11,7 +11,7 @@ from hyo2.abc2.lib.package.pkg_info import PkgInfo
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
-name = "ABC"
+name = "ABC2"
 __version__ = "2.4.0"
 __license__ = "LGPLv3 license"
 __copyright__ = "Copyright 2025 University of New Hampshire, Center for Coastal and Ocean Mapping"
