@@ -50,8 +50,12 @@ class Browser(QtWidgets.QMainWindow):
         # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.FullScreenSupportEnabled, True)
         # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.AllowRunningInsecureContent, True)
         # self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.SpatialNavigationEnabled, True)
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.JavascriptEnabled, True)
-        self.view.settings().setAttribute(QtWebEngineCore.QWebEngineSettings.JavascriptCanOpenWindows, True)
+        self.view.settings().setAttribute(
+            QtWebEngineCore.QWebEngineSettings.WebAttribute.WebGLEnabled, True)
+        self.view.settings().setAttribute(
+            QtWebEngineCore.QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
+        self.view.settings().setAttribute(
+            QtWebEngineCore.QWebEngineSettings.WebAttribute.JavascriptCanOpenWindows, True)
         self.view.settings().setAttribute(
             QtWebEngineCore.QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
         self.view.settings().setAttribute(
@@ -61,8 +65,9 @@ class Browser(QtWidgets.QMainWindow):
         # self.profile.setRequestInterceptor(self.interceptor)
         # noinspection PyUnresolvedReferences
         self.profile.downloadRequested.connect(self._download_requested)
-        self.profile.setPersistentCookiesPolicy(QtWebEngineCore.QWebEngineProfile.NoPersistentCookies)
-        self.profile.setHttpCacheType(QtWebEngineCore.QWebEngineProfile.NoCache)
+        self.profile.setPersistentCookiesPolicy(
+            QtWebEngineCore.QWebEngineProfile.PersistentCookiesPolicy.NoPersistentCookies)
+        self.profile.setHttpCacheType(QtWebEngineCore.QWebEngineProfile.HttpCacheType.NoCache)
         self.profile.setPersistentStoragePath(self._web_engine_folder())
         self.page = WebEnginePage(self.profile, self.view)
         self.view.setPage(self.page)
@@ -87,22 +92,24 @@ class Browser(QtWidgets.QMainWindow):
 
         # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
         back_action = QtGui.QAction(QtGui.QIcon.fromTheme("go-previous", QtGui.QIcon(style_icons + 'left-32.png')),
-                                    "Back", self, shortcut=QtGui.QKeySequence(QtGui.QKeySequence.Back),
+                                    "Back", self,
+                                    shortcut=QtGui.QKeySequence(QtGui.QKeySequence.StandardKey.Back),
                                     triggered=self.back)
 
-        self._actions[QtWebEngineCore.QWebEnginePage.Back] = back_action
+        self._actions[QtWebEngineCore.QWebEnginePage.WebAction.Back] = back_action
 
         # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
         forward_action = QtGui.QAction(QtGui.QIcon.fromTheme("go-next", QtGui.QIcon(style_icons + 'right-32.png')),
-                                       "Forward", self, shortcut=QtGui.QKeySequence(QtGui.QKeySequence.Forward),
+                                       "Forward", self,
+                                       shortcut=QtGui.QKeySequence(QtGui.QKeySequence.StandardKey.Forward),
                                        triggered=self.forward)
-        self._actions[QtWebEngineCore.QWebEnginePage.Forward] = forward_action
+        self._actions[QtWebEngineCore.QWebEnginePage.WebAction.Forward] = forward_action
 
         # noinspection PyArgumentList
         reload_action = QtGui.QAction(QtGui.QIcon(style_icons + 'refresh-32.png'), "Reload", self,
-                                      shortcut=QtGui.QKeySequence(QtGui.QKeySequence.Refresh),
+                                      shortcut=QtGui.QKeySequence(QtGui.QKeySequence.StandardKey.Refresh),
                                       triggered=self.reload)
-        self._actions[QtWebEngineCore.QWebEnginePage.Reload] = reload_action
+        self._actions[QtWebEngineCore.QWebEnginePage.WebAction.Reload] = reload_action
 
     def change_url(self, url: str) -> None:
         self.address_line_edit.setText(url)
@@ -117,13 +124,13 @@ class Browser(QtWidgets.QMainWindow):
             self.view.load(url)
 
     def back(self) -> None:
-        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.Back)
+        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.WebAction.Back)
 
     def forward(self) -> None:
-        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.Forward)
+        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.WebAction.Forward)
 
     def reload(self) -> None:
-        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.Reload)
+        self.view.page().triggerAction(QtWebEngineCore.QWebEnginePage.WebAction.Reload)
 
     def _url_changed(self, url: QtCore.QUrl) -> None:
         self.address_line_edit.setText(url.toString())
@@ -134,13 +141,17 @@ class Browser(QtWidgets.QMainWindow):
         for old_download in self.statusBar().children():
             if type(old_download).__name__ != 'DownloadWidget':
                 continue
-            if old_download.download_request.state() != QtWebEngineCore.QWebEngineDownloadRequest.DownloadInProgress:
+            if not isinstance(old_download, DownloadWidget):
+                continue
+            if (old_download.download_request.state() !=
+                    QtWebEngineCore.QWebEngineDownloadRequest.DownloadState.DownloadInProgress):
                 self.statusBar().removeWidget(old_download)
                 del old_download
 
         item.accept()
         download_widget = DownloadWidget(item)
-        download_widget.remove_requested.connect(self._remove_download_requested, QtCore.Qt.QueuedConnection)
+        download_widget.remove_requested.connect(self._remove_download_requested,
+                                                 QtCore.Qt.ConnectionType.QueuedConnection)
 
         self.statusBar().addWidget(download_widget)
 

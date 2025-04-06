@@ -184,7 +184,7 @@ class PkgInfoTab(QtWidgets.QMainWindow):
     @classmethod
     def _has_qt_web_engine_process(cls) -> bool:
         # noinspection PyArgumentList
-        exe_path = os.path.abspath(QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.LibraryExecutablesPath))
+        exe_path = os.path.abspath(QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.LibraryPath.LibraryExecutablesPath))
         # FIXME: workaround for Pydro22's qt.conf
         if "Library" in exe_path:
             return False
