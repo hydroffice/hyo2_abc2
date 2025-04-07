@@ -1,6 +1,9 @@
 import logging
+
 from osgeo import gdal
 from PySide6 import QtCore, QtWidgets
+
+from hyo2.abc2.lib.gdal_aux import GdalAux
 
 logger = logging.getLogger(__name__)
 
@@ -89,7 +92,11 @@ class GdalInfoTab(QtWidgets.QWidget):
             self.table.setItem(row, 1, QtWidgets.QTableWidgetItem(driver.LongName))
             self.table.setItem(row, 2, QtWidgets.QTableWidgetItem(driver.HelpTopic))
 
-            metadata = driver.GetMetadata()
+            try:
+                metadata = driver.GetMetadata()
+            except RuntimeError as e:
+                logger.warning(e, exc_info=True)
+                metadata = None
             if metadata:
                 self.table.setItem(row, 3, QtWidgets.QTableWidgetItem(str(metadata.pop(gdal.DMD_MIMETYPE, ''))))
                 self.table.setItem(row, 4, QtWidgets.QTableWidgetItem(str(metadata.pop(gdal.DMD_EXTENSION, ''))))
@@ -111,7 +118,7 @@ class GdalInfoTab(QtWidgets.QWidget):
                 table_item.setToolTip('\n'.join(metadata_list))
                 self.table.setItem(row, 7, table_item)
 
-        self.table.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
         self.table.setSortingEnabled(True)
-        self.table.sortItems(0, QtCore.Qt.AscendingOrder)
+        self.table.sortItems(0, QtCore.Qt.SortOrder.AscendingOrder)
         self.drivers_layout.addWidget(self.table)
