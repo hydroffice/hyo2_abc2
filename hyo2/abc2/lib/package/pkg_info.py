@@ -104,6 +104,21 @@ class PkgInfo:
     def deps_dict(self) -> Optional[Dict[str, str]]:
         return self._deps_dict
 
+    def edit_deps_dict(self, delete_key: str | None, new_key: str | None, new_value: str | None) -> None:
+        if new_key and not new_value:
+            raise RuntimeError("New key %s cannot be None" % new_key)
+
+        new_deps_dict = dict()
+        for key, value in self._deps_dict.items():
+            if delete_key and (key == delete_key):
+                if new_key and new_value:
+                    new_deps_dict[new_key] = new_value
+            else:
+                new_deps_dict[key] = value
+        if not delete_key and new_key and new_value:
+            new_deps_dict[new_key] = new_value
+        self._deps_dict = new_deps_dict
+
     def app_info(self,
                  app_name: Optional[str] = None,
                  app_version: Optional[str] = None,
