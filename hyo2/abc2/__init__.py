@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 name = "ABC2"
-__version__ = "2.4.3"
+__version__ = "2.4.5"
 __license__ = "LGPLv3 license"
 __copyright__ = "Copyright 2025 University of New Hampshire, Center for Coastal and Ocean Mapping"
 

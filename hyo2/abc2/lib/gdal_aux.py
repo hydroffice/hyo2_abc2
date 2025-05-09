@@ -52,7 +52,7 @@ class GdalAux:
         return drv
 
     @classmethod
-    def create_ogr_data_source(cls, ogr_format: str, output_path: str, epsg: Optional[int] = 4326):
+    def create_ogr_data_source(cls, ogr_format: int, output_path: str, epsg: Optional[int] = 4326):
         drv = cls.get_ogr_driver(ogr_format)
         output_file = output_path + cls.ogr_exts[drv.GetName()]
         # logger.debug("output: %s" % output_file)
@@ -208,6 +208,7 @@ class GdalAux:
         # check if the proj data folder is already set
         try:
             proj4_path = pyproj.datadir.get_data_dir()
+            os.environ['PROJ_DATA'] = proj4_path
             cls.proj4_data_fixed = True
             if verbose:
                 logger.debug("already set proj data folder = %s" % proj4_path)
@@ -232,6 +233,7 @@ class GdalAux:
             if os.path.exists(proj_db_path):
 
                 pyproj.datadir.set_data_dir(cand_data_folder)
+                os.environ['PROJ_DATA'] = proj4_path
                 cls.proj4_data_fixed = True
                 if verbose:
                     logger.debug("set proj data folder = %s" % cand_data_folder)
