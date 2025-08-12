@@ -8,8 +8,7 @@ from hyo2.abc2.lib.onedrive import OneDrive
 logger = logging.getLogger(__name__)
 set_logging(ns_list=["hyo2.abc2"])
 
-onedrive_link = r"https://universitysystemnh-my.sharepoint.com/:u:/g/personal/" \
-                r"gma72_usnh_edu/EabgRi9pTtdEvIVDXoEXHOYBH4FBHtN07i_8VkjpAAstYQ?e=Wn7q98&download=1"
+onedrive_link = r"https://1drv.ms/u/c/3579835830bc10b0/EbODspITBp5Cu-OWyxXVaRkBzHMZFA8GsvCYOmQCUJfLzw?e=9auP6y"
 
 root_folder = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
 tp = Testing(root_folder=root_folder)
