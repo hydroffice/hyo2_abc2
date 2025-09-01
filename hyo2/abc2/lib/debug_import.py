@@ -1,13 +1,24 @@
 class DebugImport:
 
-    def __init__(self, numpy: bool = False, pyproj: bool = False, gdal: bool = False,
+    def __init__(self, logging_name: str | None = None, numpy: bool = False, pyproj: bool = False, gdal: bool = False,
                  qt: bool = False, matplotlib: bool = False, cartopy: bool = False):
         import logging
         import time
 
+        log_path = None
+        if logging_name:
+            import os
+            home_folder = os.path.expanduser("~")
+            log_folder = os.path.join(home_folder, f".{logging_name.lower()}")
+            if not os.path.exists(log_folder):
+                os.makedirs(log_folder)
+            log_path = os.path.join(log_folder, time.strftime("%Y%m%d_%H%M%S.log"))
+
         from hyo2.abc2.lib.logging import set_logging
-        set_logging(ns_list=[""], default_logging=logging.DEBUG, hyo2_logging=logging.DEBUG, lib_logging=logging.DEBUG)
+        set_logging(ns_list=[""], default_logging=logging.DEBUG, hyo2_logging=logging.DEBUG, lib_logging=logging.DEBUG,
+                    file_logging=log_path)
         logger = logging.getLogger(__name__)
+        logger.info(f"Logging to: {log_path}")
         logger.info("DEBUG IMPORT ...")
 
         if numpy:

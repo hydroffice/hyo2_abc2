@@ -7,7 +7,8 @@ from typing import Optional
 def set_logging(ns_list: Optional[list] = None,
                 default_logging: int = logging.WARNING,
                 hyo2_logging: int = logging.INFO,
-                lib_logging: int = logging.DEBUG):
+                lib_logging: int = logging.DEBUG,
+                file_logging: str | None = None):
 
     logging.basicConfig(
         level=default_logging,
@@ -25,3 +26,9 @@ def set_logging(ns_list: Optional[list] = None,
     for ns in ns_list:
         # logger.info(ns)
         logging.getLogger(ns).setLevel(lib_logging)
+
+    if file_logging is not None:
+        file_handler = logging.FileHandler(file_logging, encoding="utf-8")
+        file_handler.setLevel(logging.DEBUG)
+        logger = logging.getLogger("")
+        logger.addHandler(file_handler)
