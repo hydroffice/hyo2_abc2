@@ -1,3 +1,4 @@
+import inspect
 import os
 from typing import Optional
 import logging
@@ -13,12 +14,24 @@ class Testing:
 
     def __init__(self, root_folder: Optional[str] = None):
 
-        if root_folder is None:
-            self.root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir))
-        else:
-            if not os.path.exists(root_folder):
-                raise RuntimeError("passed invalid root folder: %s" % root_folder)
-            self.root_folder = root_folder
+        if root_folder is None:  # Identify repository root folder of caller by finding parent folder with setup.py
+            parent_frame = inspect.currentframe().f_back  # Get caller functions frame
+            parent_filepath = os.path.abspath(inspect.getframeinfo(parent_frame).filename)  # Get filename of caller
+            parent_dir = os.path.dirname(parent_filepath)
+
+            while True:
+                if os.path.exists(os.path.join(parent_dir, "setup.py")):
+                    root_folder = parent_dir
+                    break
+                next_parent = os.path.abspath(os.path.join(parent_dir, os.path.pardir))
+                if next_parent == parent_dir:  # We've hit file system root
+                    raise RuntimeError("Cannot identify repository root. "
+                                       f"Not setup.py found in any parents of {parent_dir}")
+                parent_dir = next_parent
+
+        if not os.path.exists(root_folder):
+            raise RuntimeError("passed invalid root folder: %s" % root_folder)
+        self.root_folder = root_folder
 
     # --- FOLDERS ---
 
