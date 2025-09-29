@@ -47,14 +47,15 @@ class Testing:
             os.makedirs(folder)
         return folder
 
-    def input_data_sub_folders(self) -> list[str]:
+    def input_data_sub_folders(self, prefix: str | None = None) -> list[str]:
         """Return a list of sub-folders under the input folder"""
         folder_list = list()
         list_dir = os.listdir(self.input_data_folder())
         for element in list_dir:
             element_path = os.path.join(self.input_data_folder(), element)
             if os.path.isdir(element_path):
-                folder_list.append(element_path)
+                if prefix is None or element.startswith(prefix):
+                    folder_list.append(element_path)
         return folder_list
 
     def download_data_folder(self) -> str:
@@ -69,14 +70,15 @@ class Testing:
             os.makedirs(folder)
         return folder
 
-    def temp_data_sub_folders(self) -> list[str]:
+    def temp_data_sub_folders(self, prefix: str | None = None) -> list[str]:
         """Return a list of sub-folders under the input folder"""
         folder_list = list()
         list_dir = os.listdir(self.temp_data_folder())
         for element in list_dir:
             element_path = os.path.join(self.temp_data_folder(), element)
             if os.path.isdir(element_path):
-                folder_list.append(element_path)
+                if prefix is None or element.startswith(prefix):
+                    folder_list.append(element_path)
         return folder_list
 
     def output_data_folder(self) -> str:
