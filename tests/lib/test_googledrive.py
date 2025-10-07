@@ -2,17 +2,16 @@ import os
 import unittest
 
 from hyo2.abc2.lib.testing import Testing
-from hyo2.abc2.lib.onedrive import OneDrive
+from hyo2.abc2.lib.googledrive import GoogleDrive
 
 
-class TestABCOneDrive(unittest.TestCase):
+class TestABCGoogleDrive(unittest.TestCase):
 
     def test_init(self):
-        _ = OneDrive()
+        _ = GoogleDrive()
 
-    @unittest.skip("Temporarily disabling this test due to OneDrive changes")
     def test_download_and_unzip(self):
-        onedrive_link = r"https://1drv.ms/u/c/3579835830bc10b0/EbODspITBp5Cu-OWyxXVaRkBzHMZFA8GsvCYOmQCUJfLzw?e=9auP6y"
+        googledrive_link = r"https://drive.google.com/file/d/1BbZ_CNnoAufpd9etw1crckA0Fe1yf3tx/view?usp=sharing"
 
         root_folder = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
         tp = Testing(root_folder=root_folder)
@@ -24,8 +23,8 @@ class TestABCOneDrive(unittest.TestCase):
         if os.path.exists(unzip_path):
             os.remove(unzip_path)
 
-        od = OneDrive(show_progress=True, debug_mode=True)
-        od.get_file(file_src=onedrive_link, file_dst=zip_path, unzip_it=True)
+        gd = GoogleDrive(show_progress=True, debug_mode=True)
+        gd.get_file(file_src=googledrive_link, file_dst=zip_path, unzip_it=True)
 
         if os.path.exists(unzip_path):
             with open(unzip_path) as fid:
@@ -35,5 +34,5 @@ class TestABCOneDrive(unittest.TestCase):
 
 def suite():
     s = unittest.TestSuite()
-    s.addTests(unittest.TestLoader().loadTestsFromTestCase(TestABCOneDrive))
+    s.addTests(unittest.TestLoader().loadTestsFromTestCase(TestABCGoogleDrive))
     return s
