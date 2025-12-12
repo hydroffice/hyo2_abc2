@@ -217,10 +217,13 @@ class PkgInfoTab(QtWidgets.QMainWindow):
 
     def open_offline_manual(self) -> None:
         logger.debug("open offline manual")
-        pdf_path = os.path.join(self._ai.app_media_path, "manual.pdf")
-        if not os.path.exists(pdf_path):
-            logger.warning("unable to find offline manual at %s" % pdf_path)
-            return
+        if self._ai.app_manual_offline and os.path.exists(self._ai.app_manual_offline):
+            pdf_path = self._ai.app_manual_offline
+        else:
+            pdf_path = os.path.join(self._ai.app_media_path, "manual.pdf")
+            if not os.path.exists(pdf_path):
+                logger.warning("unable to find offline manual at %s" % pdf_path)
+                return
 
         PkgHelper.explore_folder(pdf_path)
 

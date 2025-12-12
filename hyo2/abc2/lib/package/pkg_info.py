@@ -10,10 +10,10 @@ class PkgInfo:
     """Collection of information about a package"""
 
     def __init__(self, name: str, version: str, author: str, author_email: str,
-                 lic: str, lic_url: str, path: Optional[str],
-                 url: Optional[str], manual_url: Optional[str],
-                 support_email: Optional[str], latest_url: Optional[str],
-                 deps_dict: Optional[Dict[str, str]]):
+                 lic: str, lic_url: str, path: Optional[str] = None,
+                 url: Optional[str] = None, manual_url: Optional[str] = None, manual_offline: Optional[str] = None,
+                 support_email: Optional[str] = None, latest_url: Optional[str] = None,
+                 deps_dict: Optional[Dict[str, str]] = None):
         self._name = name
         if len(version.split('.')) < 2:
             raise RuntimeError("Invalid version: %s" % version)
@@ -30,6 +30,7 @@ class PkgInfo:
             self._path = os.path.abspath(os.path.dirname(__file__))
         self._url = url
         self._manual_url = manual_url
+        self._manual_offline = manual_offline
         self._support_email = support_email
         self._latest_url = latest_url
         self._deps_dict = deps_dict
@@ -93,6 +94,10 @@ class PkgInfo:
         return self._manual_url
 
     @property
+    def manual_offline(self) -> Optional[str]:
+        return self._manual_offline
+
+    @property
     def support_email(self) -> Optional[str]:
         return self._support_email
 
@@ -130,6 +135,7 @@ class PkgInfo:
                  app_path: Optional[str] = None,
                  app_url: Optional[str] = None,
                  app_manual_url: Optional[str] = None,
+                 app_manual_offline: Optional[str] = None,
                  app_support_email: Optional[str] = None,
                  app_latest_url: Optional[str] = None,
                  app_deps_dict: Optional[Dict[str, str]] = None,
@@ -178,6 +184,10 @@ class PkgInfo:
             app_info.app_manual_url = self._manual_url
         else:
             app_info.app_manual_url = app_manual_url
+        if app_manual_offline is None:
+            app_info.app_manual_offline = self._manual_offline
+        else:
+            app_info.app_manual_offline = app_manual_offline
         if app_support_email is None:
             app_info.app_support_email = self._support_email
         else:
@@ -279,6 +289,14 @@ class PkgInfo:
     @app_manual_url.setter
     def app_manual_url(self, value: str) -> None:
         self._app_manual_url = value
+
+    @property
+    def app_manual_offline(self) -> str:
+        return self._app_manual_offline
+
+    @app_manual_offline.setter
+    def app_manual_offline(self, value: str) -> None:
+        self._app_manual_offline = value
 
     @property
     def app_support_email(self) -> str:
