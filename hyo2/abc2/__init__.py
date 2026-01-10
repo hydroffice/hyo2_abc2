@@ -12,9 +12,9 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 name = "ABC2"
-__version__ = "2.5.1"
+__version__ = "2.5.2"
 __license__ = "LGPLv3 license"
-__copyright__ = "Copyright 2025 University of New Hampshire, Center for Coastal and Ocean Mapping"
+__copyright__ = "Copyright 2026 University of New Hampshire, Center for Coastal and Ocean Mapping"
 
 pkg_info = PkgInfo(
     name=name,
