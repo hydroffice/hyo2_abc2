@@ -29,27 +29,39 @@ many of the S-57 (.000) outputs.
 
 To install them, follow these instructions:
 
-* Click the button on the Info Tab for the **NOAA S57 Files**.
+* Click the button on the Info Tab for the **NOAA S57 Support Files** (see :numref:`fig_info_tab_s57`).
 
-
-.. image:: _static/info_tab_s57.png
+.. _fig_info_tab_s57:
+.. figure:: _static/info_tab_s57.png
+    :width: 725px
     :align: center
-    :alt: logo
+    :alt: info tab
+    :figclass: align-center
 
-|
+    The **Info** tab with the **NOAA S57 Support Files** button.
 
-.. image:: _static/support_unzip.png
+* Click the button to unzip the archive (see :numref:`fig_support_unzip`).
+
+* Click the button to copy the folder (see :numref:`fig_support_unzip`). If the folder is already found, you will be prompted whether or not you wish to force a re-copy.
+
+* Click the button to install the files (see :numref:`fig_support_unzip`). Note this step requires Administrator privileges.
+
+.. _fig_support_unzip:
+.. figure:: _static/support_unzip.png
+    :width: 242px
     :align: center
-    :alt: logo
+    :alt: support unzip
+    :figclass: align-center
 
-|
+    The **NOAA S57 Support Files** widget.
 
-* Click the button to unzip the archive.
-* Click the button to copy the folder. If the folder is already found, you will be prompted whether or not you wish to force a re-copy.
-* Click the button to install the files. Note this step requires Administrator privileges.
-* Follow the prompts in the Windows command to complete the installation.
+* Follow the prompts in the Windows shell to complete the installation (see :numref:`fig_support_cmd`).
 
-
-.. image:: _static/support_cmd.png
+.. _fig_support_cmd:
+.. figure:: _static/support_cmd.png
+    :width: 700px
     :align: center
-    :alt: logo
+    :alt: support cmd
+    :figclass: align-center
+
+    The Windows shell triggered by the **NOAA S57 Support Files** widget.

@@ -8,11 +8,14 @@ def time_execution(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        start_time = time.perf_counter()
-        result = func(*args, **kwargs)
-        end_time = time.perf_counter()
-        elapsed = end_time - start_time
-        logger.info(f"{func.__name__} executed in {elapsed:.6f} seconds")
-        return result
+        start = time.perf_counter()
+        try:
+            return func(*args, **kwargs)
+        finally:
+            elapsed = time.perf_counter() - start  # seconds
+            if elapsed > 600:
+                logger.info(f"{func.__qualname__} executed in {elapsed/60:.3f} minutes")
+            else:
+                logger.info(f"{func.__qualname__} executed in {elapsed:.3f} seconds")
 
     return wrapper

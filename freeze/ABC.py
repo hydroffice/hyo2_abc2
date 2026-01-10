@@ -1,3 +1,5 @@
+import logging
+import os
 import sys
 
 from PySide6 import QtWidgets, QtGui, QtCore
@@ -9,6 +11,7 @@ from hyo2.abc2.lib.logging import set_logging
 from hyo2.abc2.lib.package.pkg_helper import PkgHelper
 
 set_logging(ns_list=["hyo2.abc2", ])
+logger = logging.getLogger(__name__)
 
 app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName(app_info.app_name)
@@ -32,8 +35,20 @@ mw = QtWidgets.QMainWindow()
 mw.setObjectName(app_info.app_main_window_object_name)
 mw.setWindowTitle('%s v.%s' % (app_info.app_name, app_info.app_version))
 mw.setWindowIcon(QtGui.QIcon(app_info.app_icon_path))
+if PkgHelper.is_windows():
+
+    try:
+        # This is needed to display the app icon on the taskbar on Windows 7
+        import ctypes
+
+        app_id = '%s v.%s' % (app_info.app_name, app_info.app_version)
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+
+    except AttributeError as e:
+        logger.debug("Unable to change app icon: %s" % e)
 
 tabs = QtWidgets.QTabWidget()
+tabs.setIconSize(QtCore.QSize(55, 55))
 mw.setCentralWidget(tabs)
 
 t = PkgInfoTab(
@@ -49,7 +64,8 @@ t = PkgInfoTab(
     with_noaa_57=True,
     main_win=mw)
 
-tabs.insertTab(0, t, "Info")
+idx_info = tabs.insertTab(0, t, QtGui.QIcon(os.path.join(PkgInfoTab.media, 'info.png')), "")
+tabs.setTabToolTip(idx_info, "Info")
 
 mw.show()
 
