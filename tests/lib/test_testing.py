@@ -34,11 +34,16 @@ class TestABCLibTesting(unittest.TestCase):
         self.assertGreaterEqual(len(self.t.download_test_files(ext="")), 0)
 
     def test_temp_data(self):
+        self.t.delete_temp_folder()
         self.assertTrue(os.path.exists(self.t.temp_data_folder()))
-        self.assertGreaterEqual(len(self.t.temp_test_files(ext="")), 0)
+        self.assertEqual(len(self.t.temp_test_files(ext="")), 0)
+        self.assertEqual(len(self.t.temp_data_sub_folders()), 0)
 
-    def test_temp_data_sub_folders(self):
+    def test_reset_temp_folder(self):
+        self.t.reset_temp_folder()
+        self.assertGreaterEqual(len(self.t.temp_test_files(ext="")), 1)
         self.assertGreaterEqual(len(self.t.temp_data_sub_folders()), 0)
+        self.t.delete_temp_folder()
 
     def test_output_data(self):
         self.assertTrue(os.path.exists(self.t.output_data_folder()))
