@@ -137,6 +137,9 @@ class Ftp:
             file_dst:           File destination
             unzip_it:           Unzip the retrieved file
         """
+        if self.conn is None:
+            raise RuntimeError("First connect to the FTP")
+
         file_dst = os.path.abspath(file_dst)
         if os.path.exists(file_dst):
             os.remove(file_dst)
