@@ -135,12 +135,15 @@ class GoogleDrive:
                     unit_scale=True,
                     unit_divisor=1024,
             ) as bar:
-                token = GoogleDrive.CHUNK_SIZE / total_size * 90.0
+                budget = 90.0
+                added = 0.0
                 for chunk in response.iter_content(chunk_size=self.CHUNK_SIZE):
                     if chunk:
                         f.write(chunk)
-                        bar.update(len(chunk))
-                        self.progress.add(token)
+                        chunk_size = len(chunk)
+                        bar.update(chunk_size)
+                        added += chunk_size
+                        self.progress.add(added / total_size * budget)
 
             if self.show_progress:
                 self.progress.end()
