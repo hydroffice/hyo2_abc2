@@ -6,6 +6,8 @@ from datetime import datetime
 
 from PySide6.QtCore import QObject, QTimer
 
+from hyo2.abc2.lib.package.pkg_helper import PkgHelper
+
 
 class FreezeDebugger(QObject):
 
@@ -14,15 +16,19 @@ class FreezeDebugger(QObject):
         # Local wall-clock time for human reading + monotonic for intervals
         return f"{datetime.now().isoformat(timespec='seconds')} | mono={time.monotonic():.3f}"
 
-    def __init__(self, parent: QObject, log_path: str, heartbeat_ms: int = 300, write_every: float = 5,
+    def __init__(self, parent: QObject, log_basename: str, heartbeat_ms: int = 300, write_every: float = 5,
                  stall_s: float = 4.5):
         super().__init__(parent)
 
         self.stall_s: float = stall_s
         self.last_beat: float = time.monotonic()
         self.dumped_for_this_stall: bool = False
+        self.log_basename = log_basename
+
+        PkgHelper.delete_old_files(folder_path=os.path.dirname(self.log_basename), ext='.log', nr_of_files_to_keep=20)
 
         # Log file (line-buffered)
+        log_path = f"{self.log_basename}.session.{PkgHelper.timestamp()}.log"
         self.log = open(log_path, "w", buffering=1, encoding="utf-8")
         self.log.write(f"\n{self.ts()} --- debugger start pid={os.getpid()} ---\n")
         faulthandler.enable(file=self.log, all_threads=True)
@@ -57,10 +63,17 @@ class FreezeDebugger(QObject):
             stalled_for = time.monotonic() - self.last_beat
             self.log.write(f"{self.ts()} [debugger] alive stalled_for={stalled_for:.3f}s\n")
 
-            if stalled_for > self.stall_s and not self.dumped_for_this_stall:
-                self.dumped_for_this_stall = True
-                self.log.write(f"{self.ts()} [debugger] GUI stalled for {stalled_for:.3f}s — dumping stacks\n")
-                faulthandler.dump_traceback(file=self.log, all_threads=True)
+            if stalled_for < self.stall_s:
+                continue
+
+            if self.dumped_for_this_stall:
+                continue
+
+            dump_path = f"{self.log_basename}.dump.{PkgHelper.timestamp()}.log"
+            with open(dump_path, "w", buffering=1, encoding="utf-8") as fod:
+                fod.write(f"{self.ts()} [debugger] GUI stalled for {stalled_for:.3f}s — dumping stacks\n")
+                faulthandler.dump_traceback(file=fod, all_threads=True)
+            self.dumped_for_this_stall = True
 
     def stop(self):
         self.log.write(f"{self.ts()} [debugger] stop\n")
