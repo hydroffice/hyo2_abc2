@@ -36,6 +36,25 @@ class TestABCAppQtProgress(unittest.TestCase):
 
         progress.end()
 
+    @unittest.skipIf(sys.platform == "linux", "Skip PySide6 on Linux")
+    def test_auto_run(self):
+
+        # noinspection PyArgumentList
+        if not QtWidgets.QApplication.instance():
+            QtWidgets.QApplication([])
+
+        widget = QtWidgets.QWidget()
+        widget.show()
+
+        progress = QtProgress(widget)
+
+        progress.start(title='Test Bar', text='Doing stuff', min_value=100, max_value=300, init_value=100)
+
+        for _ in range(10000):
+            progress.auto()
+
+        progress.end()
+
 
 def suite():
     s = unittest.TestSuite()

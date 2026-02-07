@@ -52,6 +52,11 @@ class TestABCLibCliProgress(unittest.TestCase):
             self.progress.start()
             self.progress.add(1000)
 
+    def test_auto(self):
+        for _ in range(1000):
+            self.progress.auto()
+        self.progress.end()
+
     def test_run(self):
         progress = CliProgress()
 

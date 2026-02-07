@@ -10,21 +10,21 @@ logger = logging.getLogger(__name__)
 class QtProgress(AbstractProgress):
     """Qt-based implementation of a progress bar. It does NOT run backwards"""
 
-    def __init__(self, parent):
+    def __init__(self, parent: QtWidgets.QWidget | None) -> None:
         super().__init__()
         self._parent = parent
         self._qt_app = QtWidgets.QApplication
-        self._progress = None
+        self._progress: QtWidgets.QProgressDialog | None = None
 
     @property
-    def canceled(self):
+    def canceled(self) -> bool:
         """Currently, always false"""
         if self._progress is not None:
             self._is_canceled = self._progress.wasCanceled()
         return self._is_canceled
 
-    def start(self, title="Processing", text="Ongoing processing. Please wait!", min_value=0, max_value=100,
-              init_value=0, has_abortion=False, is_disabled=False):
+    def start(self, title: str = "Progress", text: str = "Processing", min_value: float = 0.0, max_value: float = 100.0,
+              init_value: float = 0.0, has_abortion: bool = False, is_disabled: bool = False) -> None:
 
         self._is_disabled = is_disabled
         if is_disabled:
@@ -49,15 +49,16 @@ class QtProgress(AbstractProgress):
         if self._progress is None:
             self._progress = QtWidgets.QProgressDialog(self._parent)
         self._progress.setWindowTitle(title)
-        self._progress.setWindowModality(QtCore.Qt.WindowModal)
+        self._progress.setWindowModality(QtCore.Qt.WindowModality.WindowModal)
         if not has_abortion:
+            # noinspection PyTypeChecker
             self._progress.setCancelButton(None)
         self._progress.setMinimumDuration(1000)
 
         self._display()
         self._progress.setVisible(True)
 
-    def update(self, value=None, text=None, restart=False):
+    def update(self, value: float = None, text: str = None, restart: bool = False) -> None:
         if self._is_disabled:
             return
 
@@ -80,7 +81,7 @@ class QtProgress(AbstractProgress):
 
         self._display()
 
-    def add(self, quantum, text=None):
+    def add(self, quantum: float, text: str = None) -> None:
         if self._is_disabled:
             return
 
@@ -106,14 +107,20 @@ class QtProgress(AbstractProgress):
 
         self._display()
 
-    def end(self):
+    def auto(self) -> None:
+        if self._is_disabled:
+            return
+        self._auto_value()
+        self._display()
+
+    def end(self) -> None:
         self._value = self._max
         self._text = 'Done!'
 
         self._display()
         self._progress.setHidden(True)
 
-    def _display(self):
+    def _display(self) -> None:
 
         if self._progress is None:
             logger.info("The progress bar was not started")

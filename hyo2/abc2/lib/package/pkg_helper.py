@@ -57,6 +57,43 @@ class PkgHelper:
         logger.info("cleaning folder: %s ... DONE" % folder)
 
     @classmethod
+    def delete_old_files(cls, folder_path: str, ext: str = ".log", nr_of_files_to_keep: int = 10) -> None:
+        # Delete the oldest 'ext' files in `directory` in excess of the newest `keep` ones
+
+        if nr_of_files_to_keep < 0:
+            raise ValueError("keep must be >= 0")
+
+        if not os.path.isdir(folder_path):
+            raise NotADirectoryError(f"Not a directory: {folder_path}")
+
+        # Collect full paths to .log files (non-recursive)
+        logs = []
+        for name in os.listdir(folder_path):
+            if not name.endswith(ext):
+                continue
+            full_path = os.path.join(folder_path, name)
+            if os.path.isfile(full_path):
+                logs.append(full_path)
+
+        if len(logs) <= nr_of_files_to_keep:
+            return
+
+        # Sort by modification time (oldest first)
+        logs.sort(key=os.path.getmtime)
+
+        to_delete = logs[:-nr_of_files_to_keep]
+        nr_of_deleted = 0
+        for fp in to_delete:
+            try:
+                os.remove(fp)
+                nr_of_deleted += 1
+            except OSError:
+                # Can't delete (permissions/in use). Skip it.
+                pass
+
+        logger.info(f"Deleted {nr_of_deleted} old log files")
+
+    @classmethod
     def explore_folder(cls, path: str) -> bool:
         """Open the passed path using OS-native commands"""
 

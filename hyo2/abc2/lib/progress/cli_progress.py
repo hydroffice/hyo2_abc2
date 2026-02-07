@@ -13,12 +13,12 @@ class CliProgress(AbstractProgress):
         self.use_logger = use_logger
 
     @property
-    def canceled(self):
+    def canceled(self) -> bool:
         """Currently, always false"""
         return self._is_canceled
 
-    def start(self, title="Processing", text="Please wait!", min_value=0, max_value=100, init_value=0,
-              has_abortion=False, is_disabled=False):
+    def start(self, title: str = "Progress", text: str = "Processing", min_value: float = 0.0, max_value: float = 100.0,
+              init_value: float = 0.0, has_abortion: bool = False, is_disabled: bool = False) -> None:
         # has_abortion is not used for CLI implementation
 
         self._is_disabled = is_disabled
@@ -44,7 +44,7 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def update(self, value=None, text=None, restart=False):
+    def update(self, value: float = None, text: str = None, restart: bool = False) -> None:
         if self._is_disabled:
             return
 
@@ -62,7 +62,7 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def add(self, quantum, text=None):
+    def add(self, quantum: float, text: str = None) -> None:
         if self._is_disabled:
             return
 
@@ -81,7 +81,13 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def end(self):
+    def auto(self) -> None:
+        if self._is_disabled:
+            return
+        self._auto_value()
+        self._print()
+
+    def end(self) -> None:
         if self._is_disabled:
             return
 
@@ -90,7 +96,7 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def _print(self):
+    def _print(self) -> None:
         if self.use_logger:
             logging.debug('[%s] %s: %.1f%%' % (self._title, self._text, (self._value - self._min) / self._range * 100))
         else:
