@@ -58,7 +58,7 @@ class QtProgress(AbstractProgress):
         self._display()
         self._progress.setVisible(True)
 
-    def update(self, value: float = None, text: str = None, restart: bool = False) -> None:
+    def update(self, value: float = None, text: str | None = None, restart: bool = False) -> None:
         if self._is_disabled:
             return
 
@@ -81,7 +81,7 @@ class QtProgress(AbstractProgress):
 
         self._display()
 
-    def add(self, quantum: float, text: str = None) -> None:
+    def add(self, quantum: float, text: str | None = None) -> None:
         if self._is_disabled:
             return
 
@@ -107,16 +107,17 @@ class QtProgress(AbstractProgress):
 
         self._display()
 
-    def auto(self) -> None:
+    def auto(self, text: str | None = None) -> None:
         if self._is_disabled:
             return
         self._auto_value()
+        if text is not None:
+            self._text = text
         self._display()
 
     def end(self) -> None:
         self._value = self._max
         self._text = 'Done!'
-
         self._display()
         self._progress.setHidden(True)
 
@@ -130,7 +131,7 @@ class QtProgress(AbstractProgress):
 
         self._progress.setLabelText(self._text)
         self._progress.forceShow()
-        self._progress.setValue(((self._value - self._min) / self._range) * 100)
+        self._progress.setValue(int(((self._value - self._min) / self._range) * 100))
 
         # noinspection PyArgumentList
         self._qt_app.processEvents()

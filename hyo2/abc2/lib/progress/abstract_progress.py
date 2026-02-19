@@ -55,11 +55,11 @@ class AbstractProgress(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def update(self, value: float = None, text: str = None, restart: bool = False) -> None:
+    def update(self, value: float = None, text: str | None = None, restart: bool = False) -> None:
         pass
 
     @abstractmethod
-    def add(self, quantum: float, text: str = None) -> None:
+    def add(self, quantum: float, text: str | None = None) -> None:
         pass
 
     def _auto_value(self, min_step: float = 1e-10, max_step: float = 1.0) -> None:
@@ -70,7 +70,7 @@ class AbstractProgress(metaclass=ABCMeta):
         self._value += min_step + (max_step - min_step) * (1.0 - p) ** 2
 
     @abstractmethod
-    def auto(self) -> None:
+    def auto(self, text: str | None = None) -> None:
         pass
 
     @abstractmethod

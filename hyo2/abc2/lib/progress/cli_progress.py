@@ -44,7 +44,7 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def update(self, value: float = None, text: str = None, restart: bool = False) -> None:
+    def update(self, value: float = None, text: str | None = None, restart: bool = False) -> None:
         if self._is_disabled:
             return
 
@@ -62,7 +62,7 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def add(self, quantum: float, text: str = None) -> None:
+    def add(self, quantum: float, text: str | None = None) -> None:
         if self._is_disabled:
             return
 
@@ -81,10 +81,12 @@ class CliProgress(AbstractProgress):
 
         self._print()
 
-    def auto(self) -> None:
+    def auto(self, text: str | None = None) -> None:
         if self._is_disabled:
             return
         self._auto_value()
+        if text is not None:
+            self._text = text
         self._print()
 
     def end(self) -> None:
