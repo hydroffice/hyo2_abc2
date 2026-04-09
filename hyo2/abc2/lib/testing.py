@@ -1,6 +1,7 @@
 import inspect
 import logging
 import os
+import types
 from shutil import copytree, rmtree
 
 logger = logging.getLogger(__name__)
@@ -8,10 +9,17 @@ logger = logging.getLogger(__name__)
 
 class Testing:
 
-    def __init__(self, root_folder: str | None = None):
+    def __init__(self, root_folder: str | None = None) -> None:
 
         if root_folder is None:  # Identify repository root folder of caller by finding parent folder with setup.py
-            parent_frame = inspect.currentframe().f_back  # Get caller functions frame
+            current_frame = inspect.currentframe()
+            if current_frame is None:
+                raise RuntimeError("Current frame cannot be None")
+            current_frame: types.FrameType
+            parent_frame = current_frame.f_back  # Get caller functions frame
+            if parent_frame is None:
+                raise RuntimeError("Parent frame cannot be None")
+            parent_frame: types.FrameType
             parent_filepath = os.path.abspath(inspect.getframeinfo(parent_frame).filename)  # Get filename of caller
             parent_dir = os.path.dirname(parent_filepath)
 
@@ -25,9 +33,10 @@ class Testing:
                                        f"Not setup.py found in any parents of {parent_dir}")
                 parent_dir = next_parent
 
+        root_folder: str
         if not os.path.exists(root_folder):
             raise RuntimeError("passed invalid root folder: %s" % root_folder)
-        self.root_folder = root_folder
+        self.root_folder: str = root_folder
 
     # --- FOLDERS ---
 
