@@ -32,10 +32,10 @@ class PkgHelper:
 
         logger.info("cleaning folder: %s ..." % folder)
         if not filter_files:
-            filter_files = ()
+            filter_files = tuple()
         logger.debug("file filters: %s" % (filter_files,))
         if not filter_folders:
-            filter_folders = ()
+            filter_folders = tuple()
         logger.debug("folder filters: %s" % (filter_folders,))
 
         for dir_path, dir_names, files in os.walk(folder):
@@ -154,7 +154,7 @@ class PkgHelper:
         # noinspection PyUnresolvedReferences
         from HSTB.explorer import __file__ as hstb_explorer_file
 
-        return os.path.abspath(os.path.join(os.path.dirname(hstb_explorer_file)))
+        return os.path.abspath(os.path.join(os.path.dirname(str(hstb_explorer_file))))
 
     @classmethod
     def hstb_woa09_folder(cls) -> str:
@@ -267,6 +267,7 @@ class PkgHelper:
                         continue
 
                 # check if the name of the script is being called
+                # noinspection PyBroadException
                 try:
                     command_line = proc.cmdline()
                 except Exception:
@@ -307,6 +308,7 @@ class PkgHelper:
     def is_user_admin(cls):
         if cls.is_windows():
 
+            # noinspection PyUnresolvedReferences
             if ctypes.windll.shell32.IsUserAnAdmin():
                 logger.debug("user is admin")
                 return True
@@ -447,7 +449,7 @@ class PkgHelper:
         msg = str()
 
         msg += style_row("General Info", is_h2=True)
-        msg += style_row("version: %s" % self._pi.version)
+        msg += style_row(f"version: {self._pi.version} [alpha: {self._pi.app_alpha}, beta: {self._pi.app_beta}]" )
         msg += style_row("author: %s" % style_mailto(self._pi.author, self._pi.author_email))
         msg += style_row("general support: %s" % style_mailto(self._pi.support_email, self._pi.support_email))
         if with_ocs_email:

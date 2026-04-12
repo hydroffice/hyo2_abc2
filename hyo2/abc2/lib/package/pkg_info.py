@@ -38,7 +38,8 @@ class PkgInfo:
         # app info
         self._app_name = None  # type: Optional[str]
         self._app_version = None  # type: Optional[str]
-        self._app_beta = False  # type: Optional[bool]
+        self._app_alpha = False  # type: bool
+        self._app_beta = False  # type: bool
         self._app_author = None  # type: Optional[str]
         self._app_author_email = None  # type: Optional[str]
         self._app_lic = None  # type: Optional[str]
@@ -46,6 +47,7 @@ class PkgInfo:
         self._app_path = None  # type: Optional[str]
         self._app_url = None  # type: Optional[str]
         self._app_manual_url = None  # type: Optional[str]
+        self._app_manual_offline = None  # type: Optional[str]
         self._app_support_email = None  # type: Optional[str]
         self._app_latest_url = None  # type: Optional[str]
         self._app_deps_dict = None  # type: Optional[Dict[str, str]]
@@ -86,7 +88,9 @@ class PkgInfo:
         return self._path
 
     @property
-    def url(self) -> Optional[str]:
+    def url(self) -> str:
+        if self._url is None:
+            raise RuntimeError("url not set")
         return self._url
 
     @property
@@ -98,7 +102,9 @@ class PkgInfo:
         return self._manual_offline
 
     @property
-    def support_email(self) -> Optional[str]:
+    def support_email(self) -> str:
+        if self._support_email is None:
+            raise RuntimeError("support_email not set")
         return self._support_email
 
     @property
@@ -106,7 +112,9 @@ class PkgInfo:
         return self._latest_url
 
     @property
-    def deps_dict(self) -> Optional[Dict[str, str]]:
+    def deps_dict(self) -> Dict[str, str]:
+        if self._deps_dict is None:
+            return {}
         return self._deps_dict
 
     def edit_deps_dict(self, delete_key: str | None, new_key: str | None, new_value: str | None) -> None:
@@ -114,7 +122,7 @@ class PkgInfo:
             raise RuntimeError("New key %s cannot be None" % new_key)
 
         new_deps_dict = dict()
-        for key, value in self._deps_dict.items():
+        for key, value in self.deps_dict.items():
             if delete_key and (key == delete_key):
                 if new_key and new_value:
                     new_deps_dict[new_key] = new_value
@@ -127,7 +135,8 @@ class PkgInfo:
     def app_info(self,
                  app_name: Optional[str] = None,
                  app_version: Optional[str] = None,
-                 app_beta: Optional[bool] = False,
+                 app_alpha: bool = False,
+                 app_beta: bool = False,
                  app_author: Optional[str] = None,
                  app_author_email: Optional[str] = None,
                  app_lic: Optional[str] = None,
@@ -155,6 +164,7 @@ class PkgInfo:
             app_info.app_version = self._version
         else:
             app_info.app_version = app_version
+        app_info.app_alpha = app_alpha
         app_info.app_beta = app_beta
         if app_author is None:
             app_info.app_author = self._author
@@ -212,6 +222,8 @@ class PkgInfo:
 
     @property
     def app_name(self) -> str:
+        if self._app_name is None:
+            raise RuntimeError("app_name not set")
         return self._app_name
 
     @app_name.setter
@@ -219,12 +231,26 @@ class PkgInfo:
         self._app_name = value
 
     @property
+    def app_name_no_spaces(self) -> str:
+        return self.app_name.replace(' ', '')
+
+    @property
     def app_version(self) -> str:
+        if self._app_version is None:
+            raise RuntimeError("app_version not set")
         return self._app_version
 
     @app_version.setter
     def app_version(self, value: str) -> None:
         self._app_version = value
+
+    @property
+    def app_alpha(self) -> bool:
+        return self._app_alpha
+
+    @app_alpha.setter
+    def app_alpha(self, value: bool) -> None:
+        self._app_alpha = value
 
     @property
     def app_beta(self) -> bool:
@@ -236,6 +262,8 @@ class PkgInfo:
 
     @property
     def app_author(self) -> str:
+        if self._app_author is None:
+            raise RuntimeError("app_author not set")
         return self._app_author
 
     @app_author.setter
@@ -244,6 +272,8 @@ class PkgInfo:
 
     @property
     def app_author_email(self) -> str:
+        if self._app_author_email is None:
+            raise RuntimeError("app_author_email not set")
         return self._app_author_email
 
     @app_author_email.setter
@@ -252,6 +282,8 @@ class PkgInfo:
 
     @property
     def app_lic(self) -> str:
+        if self._app_lic is None:
+            raise RuntimeError("app_lic not set")
         return self._app_lic
 
     @app_lic.setter
@@ -260,6 +292,8 @@ class PkgInfo:
 
     @property
     def app_lic_url(self) -> str:
+        if self._app_lic_url is None:
+            raise RuntimeError("app_lic_url not set")
         return self._app_lic_url
 
     @app_lic_url.setter
@@ -268,6 +302,8 @@ class PkgInfo:
 
     @property
     def app_path(self) -> str:
+        if self._app_path is None:
+            raise RuntimeError("app_path not set")
         return self._app_path
 
     @app_path.setter
@@ -276,6 +312,8 @@ class PkgInfo:
 
     @property
     def app_url(self) -> str:
+        if self._app_url is None:
+            raise RuntimeError("app_url not set")
         return self._app_url
 
     @app_url.setter
@@ -284,6 +322,8 @@ class PkgInfo:
 
     @property
     def app_manual_url(self) -> str:
+        if self._app_manual_url is None:
+            raise RuntimeError("app_manual_url not set")
         return self._app_manual_url
 
     @app_manual_url.setter
@@ -292,6 +332,8 @@ class PkgInfo:
 
     @property
     def app_manual_offline(self) -> str:
+        if self._app_manual_offline is None:
+            raise RuntimeError("app_manual_offline not set")
         return self._app_manual_offline
 
     @app_manual_offline.setter
@@ -300,6 +342,8 @@ class PkgInfo:
 
     @property
     def app_support_email(self) -> str:
+        if self._app_support_email is None:
+            raise RuntimeError("app_support_email not set")
         return self._app_support_email
 
     @app_support_email.setter
@@ -308,6 +352,8 @@ class PkgInfo:
 
     @property
     def app_latest_url(self) -> str:
+        if self._app_latest_url is None:
+            raise RuntimeError("app_latest_url not set")
         return self._app_latest_url
 
     @app_latest_url.setter
@@ -316,6 +362,8 @@ class PkgInfo:
 
     @property
     def app_deps_dict(self) -> Dict[str, str]:
+        if self._app_deps_dict is None:
+            return {}
         return self._app_deps_dict
 
     @app_deps_dict.setter
@@ -356,6 +404,8 @@ class PkgInfo:
 
     @property
     def app_tabs_icon_size(self) -> int:
+        if self._app_tabs_icon_size is None:
+            raise RuntimeError("app_tabs_icon_size not set")
         return self._app_tabs_icon_size
 
     @app_tabs_icon_size.setter
@@ -364,6 +414,8 @@ class PkgInfo:
 
     @property
     def app_toolbars_icon_size(self) -> int:
+        if self._app_toolbars_icon_size is None:
+            raise RuntimeError("app_toolbars_icon_size not set")
         return self._app_toolbars_icon_size
 
     @app_toolbars_icon_size.setter
