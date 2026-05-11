@@ -7,8 +7,11 @@ import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
+from http import client
+from urllib import parse
 
 import psutil
+import requests
 from appdirs import user_data_dir
 
 from hyo2.abc2.lib.package.pkg_info import PkgInfo
@@ -25,17 +28,73 @@ class PkgHelper:
         self._pi = pkg_info
 
     @classmethod
+    def check_opendap_url(cls, base_url: str, timeout: float = 10.0) -> bool:
+        dds_url = f"{base_url}.dds"
+        try:
+            resp = requests.get(dds_url, timeout=timeout)
+            if resp.status_code != 200:
+                return False
+
+            text = resp.text.lstrip()
+            return text.startswith("Dataset {") or "Dataset {" in text
+        except requests.RequestException:
+            return False
+
+    @classmethod
+    def check_url(cls, url: str, allow_2xx: bool = False, allow_3xx: bool = False,
+                  verbose: bool = False) -> bool:
+        conn = None
+        try:
+            p = parse.urlparse(url)
+
+            if p.scheme == "https":
+                conn = client.HTTPSConnection(p.netloc, timeout=10)
+            elif p.scheme == "http":
+                conn = client.HTTPConnection(p.netloc, timeout=10)
+            else:
+                logger.warning("unsupported URL scheme: %s", url)
+                return False
+
+            path = p.path or "/"
+            if p.query:
+                path = f"{path}?{p.query}"
+
+            conn.request("HEAD", path)
+            resp = conn.getresponse()
+
+            status = resp.status
+            if verbose:
+                logger.debug("checked url: %s -> %s", url, status)
+
+            if status == 200:
+                return True
+            if allow_2xx and 200 <= status < 300:
+                return True
+            if allow_3xx and 300 <= status < 400:
+                return True
+
+            return False
+
+        except OSError as e:
+            logger.warning("while checking %s, %s", url, e)
+            return False
+
+        finally:
+            if conn is not None:
+                conn.close()
+
+    @classmethod
     def clean_folder(cls, folder: str, filter_files: tuple[str] | None, filter_folders: tuple[str] | None) -> None:
 
         if not os.path.exists(folder):
             raise RuntimeError("Unable to locate the folder to clean: %s" % folder)
 
         logger.info("cleaning folder: %s ..." % folder)
-        if not filter_files:
-            filter_files = tuple()
+        if filter_files is None:
+            filter_files: tuple[str, ...] = tuple()
         logger.debug("file filters: %s" % (filter_files,))
-        if not filter_folders:
-            filter_folders = tuple()
+        if filter_folders is None:
+            filter_folders: tuple[str, ...] = tuple()
         logger.debug("folder filters: %s" % (filter_folders,))
 
         for dir_path, dir_names, files in os.walk(folder):
@@ -449,7 +508,7 @@ class PkgHelper:
         msg = str()
 
         msg += style_row("General Info", is_h2=True)
-        msg += style_row(f"version: {self._pi.version} [alpha: {self._pi.app_alpha}, beta: {self._pi.app_beta}]" )
+        msg += style_row(f"version: {self._pi.version} [alpha: {self._pi.app_alpha}, beta: {self._pi.app_beta}]")
         msg += style_row("author: %s" % style_mailto(self._pi.author, self._pi.author_email))
         msg += style_row("general support: %s" % style_mailto(self._pi.support_email, self._pi.support_email))
         if with_ocs_email:
