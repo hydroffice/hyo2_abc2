@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 class Testing:
 
+    __test__ = False
+
     def __init__(self, root_folder: str | None = None) -> None:
 
         if root_folder is None:  # Identify repository root folder of caller by finding parent folder with setup.py

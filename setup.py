@@ -60,6 +60,7 @@ setup(
     ],
     install_requires=[
         "appdirs",
+        "beautifulsoup4",
         "gdal",
         "matplotlib",
         "numpy",
@@ -68,7 +69,8 @@ setup(
         "pywin32 ; ""platform_system=='Windows'",
         "PySide6",
         "qt-material",
-        "requests"
+        "requests",
+        "tqdm"
     ],
     python_requires='>=3.11',
     entry_points={
