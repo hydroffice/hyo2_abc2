@@ -4,17 +4,22 @@ from typing import Optional
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.app.browser.browser import Browser
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.app.noaa_support.noaa_s57_dialog import NOAAS57Dialog
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.app.pkg_info.pkg_about.pkg_about_dialog import PkgAboutDialog
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.lib.package.pkg_helper import PkgHelper
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.lib.package.pkg_info import PkgInfo
 
 logger = logging.getLogger(__name__)
 
 
 class PkgInfoTab(QtWidgets.QMainWindow):
-    media = os.path.join(os.path.dirname(__file__), "media")
+    media = os.path.join(os.path.dirname(str(__file__)), "media")
 
     def __init__(self, main_win: QtWidgets.QMainWindow,
                  app_info: PkgInfo,
@@ -30,12 +35,12 @@ class PkgInfoTab(QtWidgets.QMainWindow):
                  with_license: bool = False,
                  with_noaa_57: bool = False,
                  with_ocs_email: bool = False
-                 ):
+                 ) -> None:
         super().__init__(main_win)
         self.main_win = main_win
         self._with_ocs_email = with_ocs_email
         self._ai = app_info
-        self.defaul_url = default_url
+        self.default_url = default_url
         self.settings = QtCore.QSettings()
 
         self.setWindowTitle(tab_name)
@@ -48,8 +53,8 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         self.frame.setLayout(self.frame_layout)
 
         if start_url is None:
-            start_url = PkgHelper(pkg_info=self._ai).web_url()
-        self.start_url = start_url
+            start_url: str = PkgHelper(pkg_info=self._ai).web_url()
+        self.start_url: str = start_url
 
         # add browser
         if self._has_qt_web_engine_process():
@@ -76,30 +81,36 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         self.toolbar.addAction(self.home_action)
 
         # online manual
-        self.open_online_manual_action = None
+        self.open_online_manual_action: QtGui.QAction | None = None
         if with_online_manual:
             self.open_online_manual_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'online_manual.png')), 'Online Manual', self)
+            if self.open_online_manual_action is None:
+                raise RuntimeError("Unset action")
             self.open_online_manual_action.setStatusTip('Open the online manual')
             # noinspection PyUnresolvedReferences
             self.open_online_manual_action.triggered.connect(self.open_online_manual)
             self.toolbar.addAction(self.open_online_manual_action)
 
         # offline manual
-        self.open_offline_manual_action = None
+        self.open_offline_manual_action: QtGui.QAction | None = None
         if with_offline_manual:
             self.open_offline_manual_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'offline_manual.png')), 'Offline Manual', self)
+            if self.open_offline_manual_action is None:
+                raise RuntimeError("Unset action")
             self.open_offline_manual_action.setStatusTip('Open the offline manual')
             # noinspection PyUnresolvedReferences
             self.open_offline_manual_action.triggered.connect(self.open_offline_manual)
             self.toolbar.addAction(self.open_offline_manual_action)
 
         # bug report
-        self.fill_bug_report_action = None
+        self.fill_bug_report_action: QtGui.QAction | None = None
         if with_bug_report:
             self.fill_bug_report_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'bug.png')), 'Bug Report', self)
+            if self.fill_bug_report_action is None:
+                raise RuntimeError("Unset action")
             self.fill_bug_report_action.setStatusTip('Fill a bug report')
             # noinspection PyUnresolvedReferences
             self.fill_bug_report_action.triggered.connect(self.fill_bug_report)
@@ -108,48 +119,58 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         self.toolbar.addSeparator()
 
         # HydrOffice.org
-        self.hyo_action = None
+        self.hyo_action: QtGui.QAction | None = None
         if with_hydroffice_link:
             self.hyo_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'hyo.png')), 'HydrOffice.org', self)
+            if self.hyo_action is None:
+                raise RuntimeError("Unset action")
             # noinspection PyUnresolvedReferences
             self.hyo_action.triggered.connect(self.load_hydroffice_org)
             self.toolbar.addAction(self.hyo_action)
 
         # noaa
-        self.noaa_action = None
+        self.noaa_action: QtGui.QAction | None = None
         if with_noaa_link:
             self.noaa_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'noaa.png')), 'nauticalcharts.noaa.gov', self)
+            if self.noaa_action is None:
+                raise RuntimeError("Unset action")
             # noinspection PyUnresolvedReferences
             self.noaa_action.triggered.connect(self.load_noaa_ocs_gov)
             self.toolbar.addAction(self.noaa_action)
 
         # ccom.unh.edu
-        self.ccom_action = None
+        self.ccom_action: QtGui.QAction | None = None
         if with_ccom_link:
             self.ccom_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'ccom.png')), 'ccom.unh.edu', self)
+            if self.ccom_action is None:
+                raise RuntimeError("Unset action")
             # noinspection PyUnresolvedReferences
             self.ccom_action.triggered.connect(self.load_ccom_unh_edu)
             self.toolbar.addAction(self.ccom_action)
 
         # unh.edu
-        self.unh_action = None
+        self.unh_action: QtGui.QAction | None = None
         if with_unh_link:
             self.unh_action = QtGui.QAction(QtGui.QIcon(os.path.join(self.media, 'unh.png')), 'unh.edu', self)
+            if self.unh_action is None:
+                raise RuntimeError("Unset action")
             # noinspection PyUnresolvedReferences
             self.unh_action.triggered.connect(self.load_unh_edu)
             self.toolbar.addAction(self.unh_action)
 
         self.toolbar.addSeparator()
 
-        self.noaa_support_action = None
+        self.noaa_support_action: QtGui.QAction | None = None
         if with_noaa_57:
             # noaa support
             self.toolbar.addSeparator()
             self.noaa_support_action = QtGui.QAction(QtGui.QIcon(os.path.join(self.media, 'noaa_support.png')),
                                                      'NOAA S57 Support Files', self)
+            if self.noaa_support_action is None:
+                raise RuntimeError("Unset action")
             # noinspection PyUnresolvedReferences
             self.noaa_support_action.triggered.connect(self.show_noaa_support)
             self.toolbar.addAction(self.noaa_support_action)
@@ -157,10 +178,12 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         self.toolbar.addSeparator()
 
         # license
-        self.license_action = None
+        self.license_action: QtGui.QAction | None = None
         if with_license:
             self.license_action = QtGui.QAction(
                 QtGui.QIcon(os.path.join(self.media, 'license.png')), 'License', self)
+            if self.license_action is None:
+                raise RuntimeError("Unset action")
             self.license_action.setStatusTip('License info')
             # noinspection PyUnresolvedReferences
             self.license_action.triggered.connect(self.load_license)
@@ -175,7 +198,10 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         self.toolbar.addAction(self.authors_action)
 
         # about
-        self.show_about_action = QtGui.QAction(QtGui.QIcon(self._ai.app_icon_path), 'About', self)
+        app_icon_path = self._ai.app_icon_path
+        if app_icon_path is None:
+            raise RuntimeError("Unset app_icon_path")
+        self.show_about_action = QtGui.QAction(QtGui.QIcon(app_icon_path), 'About', self)
         self.show_about_action.setStatusTip('Info about %s' % app_info.app_name)
         # noinspection PyUnresolvedReferences
         self.show_about_action.triggered.connect(self.about_dlg.switch_visible)
@@ -209,7 +235,7 @@ class PkgInfoTab(QtWidgets.QMainWindow):
 
     def load_default(self) -> None:
         if self.browser:
-            self.browser.change_url(self.defaul_url)
+            self.browser.change_url(self.default_url)
 
     def open_online_manual(self) -> None:
         logger.debug("open online manual")
@@ -220,7 +246,10 @@ class PkgInfoTab(QtWidgets.QMainWindow):
         if self._ai.app_manual_offline and os.path.exists(self._ai.app_manual_offline):
             pdf_path = self._ai.app_manual_offline
         else:
-            pdf_path = os.path.join(self._ai.app_media_path, "manual.pdf")
+            app_media_path = self._ai.app_media_path
+            if app_media_path is None:
+                raise RuntimeError("Unset app_media_path")
+            pdf_path = os.path.join(app_media_path, "manual.pdf")
             if not os.path.exists(pdf_path):
                 logger.warning("unable to find offline manual at %s" % pdf_path)
                 return
@@ -280,7 +309,10 @@ class PkgInfoTab(QtWidgets.QMainWindow):
             vbox.addLayout(hbox)
             hbox.addStretch()
             logo = QtWidgets.QLabel()
-            logo.setPixmap(QtGui.QPixmap(self._ai.app_icon_path))
+            app_icon_path = self._ai.app_icon_path
+            if app_icon_path is None:
+                raise RuntimeError("Unset app_icon_path")
+            logo.setPixmap(QtGui.QPixmap(app_icon_path))
             hbox.addWidget(logo)
             hbox.addStretch()
 
