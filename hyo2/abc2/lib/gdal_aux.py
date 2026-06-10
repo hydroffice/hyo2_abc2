@@ -8,6 +8,7 @@ from osgeo import gdal
 from osgeo import ogr
 from osgeo import osr
 
+# noinspection PyUnresolvedReferences
 from hyo2.abc2.lib.package.pkg_helper import PkgHelper
 
 logger = logging.getLogger(__name__)
@@ -142,7 +143,7 @@ class GdalAux:
             return
 
         # avoid to rely on env vars
-        env_vars = ('GDAL_DATA', 'GDAL_DRIVER_PATH')
+        env_vars = ('GDAL_DATA', 'GDAL_DRIVER_PATH', 'S57_CSV')
         for env_var in env_vars:
             if env_var in os.environ:
                 del os.environ[env_var]
@@ -150,6 +151,7 @@ class GdalAux:
                     logger.debug("removed %s env var" % env_var)
 
         # check if the gdal data folder is already set
+        # noinspection PyBroadException
         try:
             gdal_path = gdal.GetConfigOption('GDAL_DATA')
             if not os.path.exists(gdal_path):
@@ -157,15 +159,18 @@ class GdalAux:
             cls.gdal_data_fixed = True
             if verbose:
                 logger.debug("already set gdal data folder = %s" % gdal_path)
+            s57_csv_path = gdal.GetConfigOption('S57_CSV')
+            if gdal_path != s57_csv_path:
+                gdal.SetConfigOption('S57_CSV', gdal_path)
             return
         except Exception:
             logger.info("attempting to fix unset gdal data folder")
 
         cand_data_folders = [
-            os.path.join(os.path.dirname(gdal.__file__), 'data'),
-            os.path.join(os.path.dirname(gdal.__file__), 'data', 'gdal'),
-            os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data'),
-            os.path.join(os.path.dirname(gdal.__file__), 'osgeo', 'data', 'gdal'),
+            os.path.join(os.path.dirname(str(gdal.__file__)), 'data'),
+            os.path.join(os.path.dirname(str(gdal.__file__)), 'data', 'gdal'),
+            os.path.join(os.path.dirname(str(gdal.__file__)), 'osgeo', 'data'),
+            os.path.join(os.path.dirname(str(gdal.__file__)), 'osgeo', 'data', 'gdal'),
             os.path.join(PkgHelper.python_path(), 'Library', 'data'),  # anaconda (Win)
             os.path.join(PkgHelper.python_path(), 'Library', 'share'),  # anaconda (Win)
             os.path.join(PkgHelper.python_path(), 'Library', 'share', 'gdal'),  # anaconda (Win)
@@ -180,6 +185,7 @@ class GdalAux:
             if os.path.exists(s57_agencies_path):
 
                 gdal.SetConfigOption('GDAL_DATA', cand_data_folder)
+                gdal.SetConfigOption('S57_CSV', cand_data_folder)
                 cls.gdal_data_fixed = True
                 cls.push_gdal_error_handler()
                 if verbose:
@@ -206,6 +212,7 @@ class GdalAux:
                     logger.debug("removed %s env var" % env_var)
 
         # check if the proj data folder is already set
+        # noinspection PyBroadException
         try:
             proj4_path = pyproj.datadir.get_data_dir()
             os.environ['PROJ_DATA'] = proj4_path
@@ -217,8 +224,9 @@ class GdalAux:
             logger.info("attempting to fix unset proj data folder")
 
         # list all the potential proj data folders
+        # noinspection PyUnresolvedReferences
         cand_data_folders = [
-            os.path.join(os.path.dirname(pyproj.__file__), 'data'),
+            os.path.join(os.path.dirname(str(pyproj.__file__)), 'data'),
             os.path.join(PkgHelper.python_path(), 'Library', 'data'),  # anaconda (Win)
             os.path.join(PkgHelper.python_path(), 'Library', 'share'),  # anaconda (Win)
             os.path.join(PkgHelper.python_path(), 'Library', 'share', 'proj'),  # anaconda (Win)
@@ -233,7 +241,7 @@ class GdalAux:
             if os.path.exists(proj_db_path):
 
                 pyproj.datadir.set_data_dir(cand_data_folder)
-                os.environ['PROJ_DATA'] = proj4_path
+                os.environ['PROJ_DATA'] = proj_db_path
                 cls.proj4_data_fixed = True
                 if verbose:
                     logger.debug("set proj data folder = %s" % cand_data_folder)
