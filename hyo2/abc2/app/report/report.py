@@ -140,7 +140,7 @@ class Report:
         cc_flags = QtCore.Qt.AlignCenter | QtCore.Qt.TextWordWrap
 
         # create the printer for pdf
-        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.HighResolution)
+        printer = QtPrintSupport.QPrinter(QtPrintSupport.QPrinter.PrinterMode.HighResolution)
         printer.setCreator("HydrOffice")
         printer.setDocName("HydrOffice.pdf")
         printer.setOutputFormat(QtPrintSupport.QPrinter.PdfFormat)
