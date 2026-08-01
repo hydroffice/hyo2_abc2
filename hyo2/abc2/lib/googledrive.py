@@ -143,7 +143,8 @@ class GoogleDrive:
                         chunk_size = len(chunk)
                         bar.update(chunk_size)
                         added += chunk_size
-                        self.progress.add(added / total_size * budget)
+                        pct = added / total_size * budget
+                        self.progress.update(pct)
 
             if self.show_progress:
                 self.progress.end()
@@ -188,7 +189,7 @@ class GoogleDrive:
                     if self.show_progress:
                         if self.progress.canceled:
                             raise RuntimeError("unzip stopped by user")
-                        pct = int((self.file_count / self.file_nr) * 100.0)
+                        pct = self.file_count / self.file_nr * 99.0
                         self.progress.update(pct)
                 z.close()
                 os.remove(file_dst)
