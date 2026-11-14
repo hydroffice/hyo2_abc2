@@ -12,14 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 class WebEnginePage(QtWebEngineCore.QWebEnginePage):
+    _console_logging_enabled = os.getenv("ABC2_BROWSER_DEBUG", "0") != "0"
 
-    def javaScriptConsoleMessage(self, level, message, line_number, source_id):
-        if ("slideshare" in source_id) or ("hydroffice.org" in source_id):
-            return
-        if "ch-ua-" in message:
+    @classmethod
+    def set_console_logging_enabled(cls, enabled: bool) -> None:
+        cls._console_logging_enabled = enabled
+
+    def javaScriptConsoleMessage(self, level: QtWebEngineCore.QWebEnginePage.JavaScriptConsoleMessageLevel,
+        message: str, line_number: int, source_id: str) -> None:
+        if not self._console_logging_enabled:
             return
 
-        logger.debug("QWebEngine: %s[#%d] -> %s" % (source_id, line_number, message))
+        logger.debug("QWebEngine: %s[#%d] -> %s", source_id, line_number, message)
 
 
 class Browser(QtWidgets.QMainWindow):

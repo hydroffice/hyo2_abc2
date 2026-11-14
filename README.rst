@@ -62,6 +62,8 @@ Main GUI features:
 * A Package Info app (with Exception dialog, About dialog and Qt-based Progress Bar class)
 * A report tool
 
+Set `ABC2_BROWSER_DEBUG` environmental variable to log Java script Console Messages.
+
 |
 
 Credits
