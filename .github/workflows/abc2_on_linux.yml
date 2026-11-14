@@ -25,8 +25,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        conda install -y appdirs beautifulsoup4 cartopy gdal matplotlib-base numpy psutil pyproj qt-material tqdm flake8 coveralls pyyaml pytest pytest-cov
-        pip install PySide6
+        conda install -y appdirs beautifulsoup4 cartopy gdal matplotlib-base numpy psutil pyproj qt-material tqdm flake8 coveralls pyyaml pytest pytest-cov pyside6 qt6-webengine
+        # pip install PySide6
         sudo apt-get update
         sudo apt-get install -y libegl1
         pip install --no-deps .
